@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Floating Search Bar</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        input {
+            width: 100vw;
+            height: 100vh;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            padding: 10px;
+            box-sizing: border-box;
+            background: #ffffff4e;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="text" id="searchInput" placeholder="Search..." autofocus>
+    <script>
+        const {ipcRenderer} = window.require('electron');
+
+        const searchInput = document.getElementById('searchInput');
+
+        ipcRenderer.on('current-url', (evt, value) => {
+            searchInput.value = value.url;
+        });
+
+        searchInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                ipcRenderer.send('search-bar-enter', searchInput.value);
+                searchInput.value = '';
+            } else if (event.key === 'Escape') {
+                ipcRenderer.send('search-bar-escape');
+            }
+        });
+    </script>
+</body>
+
+</html>
