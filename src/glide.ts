@@ -11,6 +11,7 @@ export class Glide {
         this.webpage = new BrowserWindow({
             width: 800,
             height: 600,
+            //icon: path.join(__dirname, 'assets/icon.ico'),
             autoHideMenuBar: true,
         });
 
@@ -37,7 +38,6 @@ export class Glide {
             vertical: true
         });
 
-        this.webpage.setBrowserView(this.glideView);
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
     }
 
@@ -57,16 +57,30 @@ export class Glide {
     }
 
     public openDefaultUrl() {
-        this.openGlideUrl("glide://home");
+        this.openGlideUrl("glide://home"); // TODO: add settings so we can change this
     }
 
     public showUrlbar() {
+        this.webpage.setBrowserView(this.glideView);
+
+        this.glideView.setBounds({
+            x: 0,
+            y: 0,
+            width: this.webpage.getBounds().width,
+            height: this.webpage.getBounds().height,
+        });
+
         this.glideView.webContents.send('searchbar-open', { url: this.url });
         this.glideView.webContents.focus();
 
         ipcMain.on('searchbar-enter', (_event, value) => {
             this.openUrl(value);
+            this.webpage.removeBrowserView(this.glideView);
         });
+
+        ipcMain.on('searchbar-escape', () => {
+            this.webpage.removeBrowserView(this.glideView);
+        })
     }
 
     openGlideUrl(url = this.url) {

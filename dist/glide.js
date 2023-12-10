@@ -32,6 +32,7 @@ class Glide {
         this.webpage = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
+            //icon: path.join(__dirname, 'assets/icon.ico'),
             autoHideMenuBar: true,
         });
         this.glideView = new electron_1.BrowserView({
@@ -53,7 +54,6 @@ class Glide {
             horizontal: true,
             vertical: true
         });
-        this.webpage.setBrowserView(this.glideView);
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
     }
     openUrl(url = this.url) {
@@ -69,13 +69,24 @@ class Glide {
         this.webpage.loadURL(this.url);
     }
     openDefaultUrl() {
-        this.openGlideUrl("glide://home");
+        this.openGlideUrl("glide://home"); // TODO: add settings so we can change this
     }
     showUrlbar() {
+        this.webpage.setBrowserView(this.glideView);
+        this.glideView.setBounds({
+            x: 0,
+            y: 0,
+            width: this.webpage.getBounds().width,
+            height: this.webpage.getBounds().height,
+        });
         this.glideView.webContents.send('searchbar-open', { url: this.url });
         this.glideView.webContents.focus();
         electron_1.ipcMain.on('searchbar-enter', (_event, value) => {
             this.openUrl(value);
+            this.webpage.removeBrowserView(this.glideView);
+        });
+        electron_1.ipcMain.on('searchbar-escape', () => {
+            this.webpage.removeBrowserView(this.glideView);
         });
     }
     openGlideUrl(url = this.url) {

@@ -55,14 +55,15 @@
             searchInput.value = value.url;
         });
 
-        searchInput.addEventListener('keydown', (event) => {
+        searchInput.addEventListener('keydown', async (event) => {
             if (event.key === 'Enter') {
+                searchContainer.style.opacity = 0;
+                await new Promise(r => setTimeout(r, 255)); // sleep until we donw with animation
                 ipcRenderer.send('searchbar-enter', searchInput.value);
-                searchContainer.disabled = true;
-                searchContainer.style.opacity = 0;
             } else if (event.key === 'Escape') {
-                searchContainer.disabled = true;
                 searchContainer.style.opacity = 0;
+                await new Promise(r => setTimeout(r, 255)); // sleep until we donw with animation
+                ipcRenderer.send('searchbar-escape');
             }
         });
     </script>
