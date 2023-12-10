@@ -7,7 +7,7 @@ export class Glide {
     public page: BrowserView; // containing our index.html defined in dist
 
     constructor() {
-        this.url = "https://google.com";
+        this.url = "";
         this.window = new BrowserWindow({
             width: 800,
             height: 600,
