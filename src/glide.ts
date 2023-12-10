@@ -3,26 +3,23 @@ import * as path from 'path';
 
 export class Glide {
     public url: string;
-    public window: BrowserWindow;
-    public page: BrowserView;
-
-    private floatingWindow: BrowserWindow | undefined;
+    public window: BrowserWindow; // containing the open website of user
+    public page: BrowserView; // containing our index.html defined in dist
 
     constructor() {
-        this.url = "";
+        this.url = "https://google.com";
         this.window = new BrowserWindow({
             width: 800,
             height: 600,
             autoHideMenuBar: true,
+        });
+
+        this.page = new BrowserView({
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
             },
         });
-
-        this.window.loadFile(path.join(__dirname, 'index.html'));
-
-        this.page = new BrowserView();
 
         const bounds = this.window.getBounds();
 
@@ -30,19 +27,18 @@ export class Glide {
             x: 0,
             y: 0,
             width: bounds.width,
-            height: bounds.height
+            height: bounds.height,
         });
 
         this.page.setAutoResize({
             width: true,
             height: true,
             horizontal: true,
-            vertical: false
+            vertical: true
         });
 
         this.window.setBrowserView(this.page);
-
-        this.floatingWindow = undefined;
+        this.page.webContents.loadFile(path.join(__dirname, 'index.html'));
     }
 
     public openUrl(url = this.url) {
@@ -57,7 +53,7 @@ export class Glide {
             return;
         }
 
-        this.page.webContents.loadURL(this.url);
+        this.window.loadURL(this.url);
     }
 
     public openDefaultUrl() {
@@ -65,37 +61,11 @@ export class Glide {
     }
 
     public showUrlbar() {
-        this.floatingWindow = new BrowserWindow({
-            width: 300,
-            height: 50,
-            frame: false,
-            transparent: true,
-            alwaysOnTop: true,
-            webPreferences: {
-                nodeIntegration: true,
-                contextIsolation: false,
-            },
-            parent: this.window,
-        });
+        this.page.webContents.send('searchbar-open', { url: this.url });
+        this.page.webContents.focus();
 
-        this.floatingWindow.on('show', () => {
-            this.floatingWindow?.focus();
-        });
-        this.floatingWindow.on('blur', () => {
-            this.floatingWindow?.focus();
-        });
-
-        this.floatingWindow.loadFile(path.join(__dirname, "searchbar.html"));
-
-        this.floatingWindow.webContents.send('current-url', {url: this.url});
-        // searchbar stuff
-        ipcMain.on('search-bar-enter', (event, value) => {
+        ipcMain.on('searchbar-enter', (_event, value) => {
             this.openUrl(value);
-            this.floatingWindow?.close();
-        });
-
-        ipcMain.on('search-bar-escape', () => {
-            this.floatingWindow?.close();
         });
     }
 
@@ -107,6 +77,6 @@ export class Glide {
         }
 
         const filename = "html/" + this.url.replace("glide://", "") + ".html";
-        this.page.webContents.loadFile(path.join(__dirname, filename));
+        this.window.loadFile(path.join(__dirname, filename));
     }
 }

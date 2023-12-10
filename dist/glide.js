@@ -28,33 +28,33 @@ const electron_1 = require("electron");
 const path = __importStar(require("path"));
 class Glide {
     constructor() {
-        this.url = "";
+        this.url = "https://google.com";
         this.window = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
             autoHideMenuBar: true,
+        });
+        this.page = new electron_1.BrowserView({
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
             },
         });
-        this.window.loadFile(path.join(__dirname, 'index.html'));
-        this.page = new electron_1.BrowserView();
         const bounds = this.window.getBounds();
         this.page.setBounds({
             x: 0,
             y: 0,
             width: bounds.width,
-            height: bounds.height
+            height: bounds.height,
         });
         this.page.setAutoResize({
             width: true,
             height: true,
             horizontal: true,
-            vertical: false
+            vertical: true
         });
         this.window.setBrowserView(this.page);
-        this.floatingWindow = undefined;
+        this.page.webContents.loadFile(path.join(__dirname, 'index.html'));
     }
     openUrl(url = this.url) {
         this.url = url;
@@ -66,43 +66,16 @@ class Glide {
             this.openGlideUrl();
             return;
         }
-        this.page.webContents.loadURL(this.url);
+        this.window.loadURL(this.url);
     }
     openDefaultUrl() {
         this.openGlideUrl("glide://home");
     }
     showUrlbar() {
-        this.floatingWindow = new electron_1.BrowserWindow({
-            width: 300,
-            height: 50,
-            frame: false,
-            transparent: true,
-            alwaysOnTop: true,
-            webPreferences: {
-                nodeIntegration: true,
-                contextIsolation: false,
-            },
-            parent: this.window,
-        });
-        this.floatingWindow.on('show', () => {
-            var _a;
-            (_a = this.floatingWindow) === null || _a === void 0 ? void 0 : _a.focus();
-        });
-        this.floatingWindow.on('blur', () => {
-            var _a;
-            (_a = this.floatingWindow) === null || _a === void 0 ? void 0 : _a.focus();
-        });
-        this.floatingWindow.loadFile(path.join(__dirname, "searchbar.html"));
-        this.floatingWindow.webContents.send('current-url', { url: this.url });
-        // searchbar stuff
-        electron_1.ipcMain.on('search-bar-enter', (event, value) => {
-            var _a;
+        this.page.webContents.send('searchbar-open', { url: this.url });
+        this.page.webContents.focus();
+        electron_1.ipcMain.on('searchbar-enter', (_event, value) => {
             this.openUrl(value);
-            (_a = this.floatingWindow) === null || _a === void 0 ? void 0 : _a.close();
-        });
-        electron_1.ipcMain.on('search-bar-escape', () => {
-            var _a;
-            (_a = this.floatingWindow) === null || _a === void 0 ? void 0 : _a.close();
         });
     }
     openGlideUrl(url = this.url) {
@@ -112,7 +85,7 @@ class Glide {
             return;
         }
         const filename = "html/" + this.url.replace("glide://", "") + ".html";
-        this.page.webContents.loadFile(path.join(__dirname, filename));
+        this.window.loadFile(path.join(__dirname, filename));
     }
 }
 exports.Glide = Glide;
