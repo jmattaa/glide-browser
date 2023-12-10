@@ -3,42 +3,42 @@ import * as path from 'path';
 
 export class Glide {
     public url: string;
-    public window: BrowserWindow; // containing the open website of user
-    public page: BrowserView; // containing our index.html defined in dist
+    public webpage: BrowserWindow; // containing the open website of user
+    public glideView: BrowserView; // containing our index.html defined in dist
 
     constructor() {
         this.url = "";
-        this.window = new BrowserWindow({
+        this.webpage = new BrowserWindow({
             width: 800,
             height: 600,
             autoHideMenuBar: true,
         });
 
-        this.page = new BrowserView({
+        this.glideView = new BrowserView({
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
             },
         });
 
-        const bounds = this.window.getBounds();
+        const bounds = this.webpage.getBounds();
 
-        this.page.setBounds({
+        this.glideView.setBounds({
             x: 0,
             y: 0,
             width: bounds.width,
             height: bounds.height,
         });
 
-        this.page.setAutoResize({
+        this.glideView.setAutoResize({
             width: true,
             height: true,
             horizontal: true,
             vertical: true
         });
 
-        this.window.setBrowserView(this.page);
-        this.page.webContents.loadFile(path.join(__dirname, 'index.html'));
+        this.webpage.setBrowserView(this.glideView);
+        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
     }
 
     public openUrl(url = this.url) {
@@ -53,7 +53,7 @@ export class Glide {
             return;
         }
 
-        this.window.loadURL(this.url);
+        this.webpage.loadURL(this.url);
     }
 
     public openDefaultUrl() {
@@ -61,8 +61,8 @@ export class Glide {
     }
 
     public showUrlbar() {
-        this.page.webContents.send('searchbar-open', { url: this.url });
-        this.page.webContents.focus();
+        this.glideView.webContents.send('searchbar-open', { url: this.url });
+        this.glideView.webContents.focus();
 
         ipcMain.on('searchbar-enter', (_event, value) => {
             this.openUrl(value);
@@ -77,6 +77,6 @@ export class Glide {
         }
 
         const filename = "html/" + this.url.replace("glide://", "") + ".html";
-        this.window.loadFile(path.join(__dirname, filename));
+        this.webpage.loadFile(path.join(__dirname, filename));
     }
 }

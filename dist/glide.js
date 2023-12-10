@@ -28,33 +28,33 @@ const electron_1 = require("electron");
 const path = __importStar(require("path"));
 class Glide {
     constructor() {
-        this.url = "https://google.com";
-        this.window = new electron_1.BrowserWindow({
+        this.url = "";
+        this.webpage = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
             autoHideMenuBar: true,
         });
-        this.page = new electron_1.BrowserView({
+        this.glideView = new electron_1.BrowserView({
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
             },
         });
-        const bounds = this.window.getBounds();
-        this.page.setBounds({
+        const bounds = this.webpage.getBounds();
+        this.glideView.setBounds({
             x: 0,
             y: 0,
             width: bounds.width,
             height: bounds.height,
         });
-        this.page.setAutoResize({
+        this.glideView.setAutoResize({
             width: true,
             height: true,
             horizontal: true,
             vertical: true
         });
-        this.window.setBrowserView(this.page);
-        this.page.webContents.loadFile(path.join(__dirname, 'index.html'));
+        this.webpage.setBrowserView(this.glideView);
+        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
     }
     openUrl(url = this.url) {
         this.url = url;
@@ -66,14 +66,14 @@ class Glide {
             this.openGlideUrl();
             return;
         }
-        this.window.loadURL(this.url);
+        this.webpage.loadURL(this.url);
     }
     openDefaultUrl() {
         this.openGlideUrl("glide://home");
     }
     showUrlbar() {
-        this.page.webContents.send('searchbar-open', { url: this.url });
-        this.page.webContents.focus();
+        this.glideView.webContents.send('searchbar-open', { url: this.url });
+        this.glideView.webContents.focus();
         electron_1.ipcMain.on('searchbar-enter', (_event, value) => {
             this.openUrl(value);
         });
@@ -85,7 +85,7 @@ class Glide {
             return;
         }
         const filename = "html/" + this.url.replace("glide://", "") + ".html";
-        this.window.loadFile(path.join(__dirname, filename));
+        this.webpage.loadFile(path.join(__dirname, filename));
     }
 }
 exports.Glide = Glide;
