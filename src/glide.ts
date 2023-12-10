@@ -11,7 +11,6 @@ export class Glide {
         this.webpage = new BrowserWindow({
             width: 800,
             height: 600,
-            //icon: path.join(__dirname, 'assets/icon.ico'),
             autoHideMenuBar: true,
         });
 

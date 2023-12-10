@@ -32,7 +32,6 @@ class Glide {
         this.webpage = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
-            //icon: path.join(__dirname, 'assets/icon.ico'),
             autoHideMenuBar: true,
         });
         this.glideView = new electron_1.BrowserView({
