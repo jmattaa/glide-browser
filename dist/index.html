@@ -55,7 +55,7 @@
             searchInput.value = value.url;
         });
 
-        searchInput.addEventListener('keydown', async (event) => {
+        window.addEventListener('keydown', async (event) => {
             if (event.key === 'Enter') {
                 searchContainer.style.opacity = 0;
                 await new Promise(r => setTimeout(r, 255)); // sleep until we donw with animation
