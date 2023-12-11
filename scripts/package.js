@@ -1,22 +1,7 @@
 const packager = require('electron-packager');
 const path = require('path');
 
-const args = process.argv.slice(2);
-const platformOptionIndex = args.indexOf('--platform');
-const archOptionIndex = args.indexOf('--arch');
-
-const platform = platformOptionIndex !== -1 ? args[platformOptionIndex + 1] : process.platform;
-const arch = archOptionIndex !== -1 ? args[archOptionIndex + 1] : process.arch;
-
-const validPlatforms = ['darwin', 'win32', 'linux'];
-const validArchitectures = ['x64', 'ia32'];
-
-if (!validPlatforms.includes(platform) || !validArchitectures.includes(arch)) {
-    console.error('Invalid platform or architecture. Please provide valid options.');
-    process.exit(1);
-}
-
-function getPlatformIconPath() {
+function getPlatformIconPath(platform) {
     switch (platform) {
         case 'darwin':
             return path.join(process.cwd(), 'assets/icons/icon.icns');
@@ -27,21 +12,37 @@ function getPlatformIconPath() {
     }
 }
 
-const appConfig = {
-    dir: process.cwd(),
-    name: 'Glide',
-    platform: platform,
-    arch: arch,
-    out: path.join(process.cwd(), 'releases'),
-    overwrite: true,
-    icon: getPlatformIconPath(),
-};
+async function packageApp(platform, arch) {
+    const appConfig = {
+        dir: process.cwd(),
+        name: 'glide',
+        platform: platform || process.platform,
+        arch: arch || process.arch,
+        out: path.join(process.cwd(), 'releases'),
+        overwrite: true,
+        icon: getPlatformIconPath(platform),
+    };
 
-packager(appConfig)
-    .then(appPaths => {
+    try {
+        const appPaths = await packager(appConfig);
         console.log(`App packaged successfully at: ${appPaths.join(', ')}`);
-    })
-    .catch(error => {
-        console.error('Error packaging the app!\n', error);
-    });
+        return appPaths;
+    } catch (error) {
+        console.error('Error packaging the app:', error);
+        throw error;
+    }
+}
+
+if (require.main === module) {
+    const args = process.argv.slice(2);
+    const platformOptionIndex = args.indexOf('--platform');
+    const archOptionIndex = args.indexOf('--arch');
+
+    const platform = platformOptionIndex !== -1 ? args[platformOptionIndex + 1] : process.platform;
+    const arch = archOptionIndex !== -1 ? args[archOptionIndex + 1] : process.arch;
+
+    packageApp(platform, arch);
+}
+
+module.exports = packageApp;
 
