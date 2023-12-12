@@ -94,7 +94,7 @@ class Glide {
             this.openDefaultUrl();
             return;
         }
-        const filename = "html/" + this.url.replace("glide://", "") + ".html";
+        const filename = "glide-pages/" + this.url.replace("glide://", "") + ".html";
         this.webpage.loadFile(path.join(__dirname, filename));
     }
 }
