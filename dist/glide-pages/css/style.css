@@ -1,5 +1,10 @@
 /* TODO: make the theme of the page customizable by user */
-body {
-    background: #1f271b;
-    color: #fff;
+:root {
+    --glide-bg: 12, 15, 11;
+    --glide-fg: 255, 255, 255;
+}
+
+* {
+    background-color: rgb(var(--glide-bg));
+    color: rgb(var(--glide-fg));
 }
