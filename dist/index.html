@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glide</title>
+    <link rel="stylesheet" href="./glide-pages/css/style.css">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
             overflow: hidden;
+            background-color: transparent;
         }
 
         #search-container {
@@ -18,8 +20,9 @@
             height: 100vh;
             justify-content: center;
             align-items: center;
-            background: rgba(255, 255, 255, 0.29);
-            backdrop-filter: blur(5px);
+            background-color: rgba(var(--glide-bg), .8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
 
             opacity: 0;
             transition: all 255ms ease-in;
@@ -27,12 +30,12 @@
 
         #search-bar {
             font-size: 16px;
-            border: .3px solid black;
+            border: .3px solid rgba(var(--glide-fg), .29);
             border-radius: 10px;
             padding: .5rem;
             outline: none;
             box-sizing: border-box;
-            background: none;
+            background-color: transparent;
             width: 60%;
         }
     </style>
