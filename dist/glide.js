@@ -26,9 +26,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Glide = void 0;
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
+const pageHistory_1 = require("./pageHistory");
 class Glide {
     constructor() {
-        this.url = "";
+        this.url = "glide://home"; // change this to smth else from user
         this.webpage = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
@@ -39,6 +40,12 @@ class Glide {
                 nodeIntegration: true,
                 contextIsolation: false,
             },
+        });
+        this.webpage.webContents.on('did-navigate', (_event, url) => {
+            if (url.startsWith("file://" + path.join(__dirname, "glide-pages")))
+                return;
+            this.url = url;
+            this.lastPages.newPage(url);
         });
         const bounds = this.webpage.getBounds();
         this.glideView.setBounds({
@@ -54,9 +61,26 @@ class Glide {
             vertical: true
         });
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
+        this.lastPages = new pageHistory_1.PageHistory(this.url);
     }
     openUrl(url = this.url) {
         this.url = url;
+        // can i make this more efficient????
+        this.lastPages.newPage(url); // this is removed in openHistoryUrl 
+        console.log(this.lastPages);
+        if (this.url === "") {
+            this.openDefaultUrl();
+            return;
+        }
+        if (this.url.startsWith("glide://")) {
+            this.openGlideUrl();
+            return;
+        }
+        this.webpage.loadURL(this.url);
+    }
+    openHistoryUrl(url = this.url) {
+        this.url = url;
+        console.log(this.lastPages);
         if (this.url === "") {
             this.openDefaultUrl();
             return;
@@ -87,6 +111,14 @@ class Glide {
         electron_1.ipcMain.on('searchbar-escape', () => {
             this.webpage.removeBrowserView(this.glideView);
         });
+    }
+    goBack() {
+        this.url = this.lastPages.goBack();
+        this.openHistoryUrl();
+    }
+    goForward() {
+        this.url = this.lastPages.goForward();
+        this.openHistoryUrl();
     }
     openGlideUrl(url = this.url) {
         this.url = url;
