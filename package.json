@@ -3,12 +3,21 @@
     "version": "1.0.0",
     "description": "",
     "main": "dist/main.js",
+    "build": {
+        "mac": {
+            "icon": "assets/icons/icon.icns"
+        },
+        "linux": {
+            "icon": "assets/icons/icon.png"
+        }
+    },
     "scripts": {
         "build": "tsc",
         "start": "npm run build && electron .",
         "buildMacIntel": "npm run build && node ./scripts/buildMac.js --platform=x64",
         "buildMacArm": "npm run build && node ./scripts/buildMac.js --platform=arm64",
-        "buildAppImage": "npm run build && node ./scripts/buildAppImage.js"
+        "buildAppImage": "npm run build && node ./scripts/buildAppImage.js",
+        "buildDebian": "npm run build && node ./scripts/buildDebian.js --platform=x64"
     },
     "keywords": [],
     "author": "Jonathan Matta",
