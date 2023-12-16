@@ -6,7 +6,7 @@ require('./package.js')('linux', 'x64').then(function(paths) {
     const options = {
         linux: {
             target: ['AppImage'],
-            icon: 'assets/icon/icons.png',
+            icon: 'assets/icons/icon.png',
             category: 'Network',
             packageCategory: 'Network',
             maintainer: 'Jonathan Matta',
