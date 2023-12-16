@@ -26,12 +26,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Glide = void 0;
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
-const pageHistory_1 = require("./pageHistory");
 const utils_1 = require("./utils");
 class Glide {
     constructor() {
         this.url = "glide://home"; // change this to smth else from user
-        this.lastPages = new pageHistory_1.PageHistory(this.url);
         this.webpage = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
@@ -47,7 +45,6 @@ class Glide {
             if (url.startsWith("file://" + path.join(__dirname, "glide-pages")))
                 return;
             this.url = url;
-            this.lastPages.newPage(url);
         });
         const bounds = this.webpage.getBounds();
         this.glideView.setBounds({
@@ -67,24 +64,10 @@ class Glide {
     openUrl(url = this.url) {
         if (url.startsWith("glide://")) {
             this.url = url;
-            this.lastPages.newPage(this.url);
             this.openGlideUrl();
             return;
         }
         this.url = (0, utils_1.formatUrl)(url);
-        this.lastPages.newPage(this.url);
-        if (this.url === "") {
-            this.openDefaultUrl();
-            return;
-        }
-        this.webpage.loadURL(this.url);
-    }
-    openHistoryUrl(url = this.url) {
-        this.url = url;
-        if (url.startsWith("glide://")) {
-            this.openGlideUrl();
-            return;
-        }
         if (this.url === "") {
             this.openDefaultUrl();
             return;
@@ -113,12 +96,10 @@ class Glide {
         });
     }
     goBack() {
-        this.url = this.lastPages.goBack();
-        this.openHistoryUrl();
+        this.webpage.webContents.goBack();
     }
     goForward() {
-        this.url = this.lastPages.goForward();
-        this.openHistoryUrl();
+        this.webpage.webContents.goForward();
     }
     openGlideUrl(url = this.url) {
         this.url = url;

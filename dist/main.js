@@ -10,8 +10,8 @@ function createWindow() {
 electron_1.app.on('ready', () => {
     createWindow();
     electron_1.globalShortcut.register("CommandOrControl+l", () => glide.showUrlbar());
-    electron_1.globalShortcut.register("CommandOrControl+[", () => glide.goBack());
-    electron_1.globalShortcut.register("CommandOrControl+]", () => glide.goForward());
+    electron_1.globalShortcut.register("CommandOrControl+b", () => glide.goBack());
+    electron_1.globalShortcut.register("CommandOrControl+f", () => glide.goForward());
     electron_1.app.on('activate', () => {
         // mocos stuff
         if (electron_1.BrowserWindow.getAllWindows().length === 0)

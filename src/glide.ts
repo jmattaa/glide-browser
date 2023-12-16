@@ -1,17 +1,14 @@
 import { BrowserWindow, BrowserView, ipcMain } from 'electron';
 import * as path from 'path';
-import { PageHistory } from './pageHistory';
 import { formatUrl } from './utils';
 
 export class Glide {
     public url: string;
     public webpage: BrowserWindow; // containing the open website of user
     public glideView: BrowserView; // containing our index.html defined in dist
-    public lastPages: PageHistory;
 
     constructor() {
         this.url = "glide://home"; // change this to smth else from user
-        this.lastPages = new PageHistory(this.url);
 
         this.webpage = new BrowserWindow({
             width: 800,
@@ -31,7 +28,6 @@ export class Glide {
                 return;
 
             this.url = url
-            this.lastPages.newPage(url);
         });
 
         const bounds = this.webpage.getBounds();
@@ -56,31 +52,14 @@ export class Glide {
     public openUrl(url = this.url) {
         if (url.startsWith("glide://")) {
             this.url = url;
-            this.lastPages.newPage(this.url);
             this.openGlideUrl();
             return;
         }
 
         this.url = formatUrl(url);
-        this.lastPages.newPage(this.url);
         if (this.url === "") {
             this.openDefaultUrl();
             return
-        }
-
-        this.webpage.loadURL(this.url);
-    }
-
-    public openHistoryUrl(url = this.url) {
-        this.url = url;
-
-        if (url.startsWith("glide://")) {
-            this.openGlideUrl();
-            return;
-        }
-        if (this.url === "") {
-            this.openDefaultUrl();
-            return;
         }
 
         this.webpage.loadURL(this.url);
@@ -114,13 +93,11 @@ export class Glide {
     }
 
     public goBack() {
-        this.url = this.lastPages.goBack();
-        this.openHistoryUrl();
+        this.webpage.webContents.goBack();
     }
 
     public goForward() {
-        this.url = this.lastPages.goForward();
-        this.openHistoryUrl();
+        this.webpage.webContents.goForward();
     }
 
     openGlideUrl(url = this.url) {
