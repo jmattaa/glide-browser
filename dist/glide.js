@@ -27,9 +27,11 @@ exports.Glide = void 0;
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
 const pageHistory_1 = require("./pageHistory");
+const utils_1 = require("./utils");
 class Glide {
     constructor() {
         this.url = "glide://home"; // change this to smth else from user
+        this.lastPages = new pageHistory_1.PageHistory(this.url);
         this.webpage = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
@@ -61,32 +63,30 @@ class Glide {
             vertical: true
         });
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
-        this.lastPages = new pageHistory_1.PageHistory(this.url);
     }
     openUrl(url = this.url) {
-        this.url = url;
-        // can i make this more efficient????
-        this.lastPages.newPage(url); // this is removed in openHistoryUrl 
-        console.log(this.lastPages);
-        if (this.url === "") {
-            this.openDefaultUrl();
+        if (url.startsWith("glide://")) {
+            this.url = url;
+            this.lastPages.newPage(this.url);
+            this.openGlideUrl();
             return;
         }
-        if (this.url.startsWith("glide://")) {
-            this.openGlideUrl();
+        this.url = (0, utils_1.formatUrl)(url);
+        this.lastPages.newPage(this.url);
+        if (this.url === "") {
+            this.openDefaultUrl();
             return;
         }
         this.webpage.loadURL(this.url);
     }
     openHistoryUrl(url = this.url) {
         this.url = url;
-        console.log(this.lastPages);
-        if (this.url === "") {
-            this.openDefaultUrl();
+        if (url.startsWith("glide://")) {
+            this.openGlideUrl();
             return;
         }
-        if (this.url.startsWith("glide://")) {
-            this.openGlideUrl();
+        if (this.url === "") {
+            this.openDefaultUrl();
             return;
         }
         this.webpage.loadURL(this.url);
