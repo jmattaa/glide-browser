@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import { Glide } from './glide';
 
 let glide: Glide;
@@ -10,12 +10,6 @@ function createWindow() {
 
 app.on('ready', () => {
     createWindow()
-
-    globalShortcut.register("CommandOrControl+l", () => glide.showUrlbar());
-    globalShortcut.register("CommandOrControl+b", () =>
-        glide.goBack());
-    globalShortcut.register("CommandOrControl+f", () =>
-        glide.goForward());
 
     app.on('activate', () => {
         // mocos stuff

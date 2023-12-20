@@ -27,6 +27,7 @@ exports.Glide = void 0;
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
 const utils_1 = require("./utils");
+const menuShortcut_1 = require("./menuShortcut");
 class Glide {
     constructor() {
         this.url = "glide://home"; // change this to smth else from user
@@ -60,6 +61,7 @@ class Glide {
             vertical: true
         });
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
+        this.webpage.setMenu((0, menuShortcut_1.getMenuShortcuts)(this));
     }
     openUrl(url = this.url) {
         if (url.startsWith("glide://")) {

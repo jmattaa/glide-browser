@@ -1,6 +1,7 @@
 import { BrowserWindow, BrowserView, ipcMain } from 'electron';
 import * as path from 'path';
 import { formatUrl } from './utils';
+import { getMenuShortcuts } from './menuShortcut';
 
 export class Glide {
     public url: string;
@@ -47,6 +48,8 @@ export class Glide {
         });
 
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
+
+        this.webpage.setMenu(getMenuShortcuts(this));
     }
 
     public openUrl(url = this.url) {
