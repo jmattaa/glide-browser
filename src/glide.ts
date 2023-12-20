@@ -7,14 +7,16 @@ export class Glide {
     public url: string;
     public webpage: BrowserWindow; // containing the open website of user
     public glideView: BrowserView; // containing our index.html defined in dist
+    public settings: any;
 
-    constructor() {
-        this.url = "glide://home"; // change this to smth else from user
+    constructor(settings: any) {
+        this.settings = settings;
+        this.url = this.settings.defaultUrl;
 
         this.webpage = new BrowserWindow({
             width: 800,
             height: 600,
-            autoHideMenuBar: true,
+            autoHideMenuBar: this.settings.autohideMenu,
         });
 
         this.glideView = new BrowserView({
@@ -25,7 +27,7 @@ export class Glide {
         });
 
         this.webpage.webContents.on('did-navigate', (_event, url) => {
-            if (url.startsWith("file://" + path.join(__dirname, "glide-pages")))
+            if (url.startsWith('file://' + path.join(__dirname, 'glide-pages')))
                 return;
 
             this.url = url
@@ -47,20 +49,25 @@ export class Glide {
             vertical: true
         });
 
-        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
+        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'))
+            .then(() => {
+                this.glideView.webContents.send(
+                    'main-open', { settings: this.settings })
+                this.glideView.webContents.toggleDevTools();
+            });
 
         this.webpage.setMenu(getMenuShortcuts(this));
     }
 
     public openUrl(url = this.url) {
-        if (url.startsWith("glide://")) {
+        if (url.startsWith('glide://')) {
             this.url = url;
             this.openGlideUrl();
             return;
         }
 
         this.url = formatUrl(url);
-        if (this.url === "") {
+        if (this.url === '') {
             this.openDefaultUrl();
             return
         }
@@ -69,7 +76,7 @@ export class Glide {
     }
 
     public openDefaultUrl() {
-        this.openGlideUrl("glide://home"); // TODO: add settings so we can change this
+        this.openUrl(this.settings.defaultUrl);
     }
 
     public showUrlbar() {
@@ -105,12 +112,12 @@ export class Glide {
 
     openGlideUrl(url = this.url) {
         this.url = url;
-        if (!this.url.startsWith("glide://")) {
+        if (!this.url.startsWith('glide://')) {
             this.openDefaultUrl();
             return;
         }
 
-        const filename = "glide-pages/" + this.url.replace("glide://", "") + ".html";
+        const filename = 'glide-pages/' + this.url.replace('glide://', '') + '.html';
         this.webpage.loadFile(path.join(__dirname, filename));
     }
 }

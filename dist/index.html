@@ -46,16 +46,22 @@
         <input type="text" id="search-bar" placeholder="">
     </div>
     <script>
+        const sheet = document.styleSheets[0];
         const searchContainer = document.getElementById('search-container');
         const searchInput = document.getElementById('search-bar');
 
         const {ipcRenderer} = window.require('electron');
 
-        ipcRenderer.on('searchbar-open', (evt, value) => {
+        ipcRenderer.on('main-open', (_e, {settings}) => {
+            sheet.insertRule(`:root{--glide-bg:${settings.theme.bg} !important}`);
+            sheet.insertRule(`:root{--glide-fg:${settings.theme.fg} !important}`);
+        })
+
+        ipcRenderer.on('searchbar-open', (_e, {url}) => {
             searchContainer.style.opacity = 1;
             searchContainer.disabled = false;
             searchInput.focus();
-            searchInput.value = value.url;
+            searchInput.value = url;
         });
 
         window.addEventListener('keydown', async (event) => {
