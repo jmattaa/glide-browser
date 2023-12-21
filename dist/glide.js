@@ -62,11 +62,7 @@ class Glide {
             horizontal: true,
             vertical: true
         });
-        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'))
-            .then(() => {
-            this.glideView.webContents.send('main-open', { settings: this.settings });
-            this.glideView.webContents.toggleDevTools();
-        });
+        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
         this.webpage.setMenu((0, menuShortcut_1.getMenuShortcuts)(this));
         // gen files
         (0, templateGen_1.genFromTemplateFile)(path.join(__dirname, 'templates/css/style.css.template'), path.join(__dirname, 'glide-pages/css/style.css'), {
