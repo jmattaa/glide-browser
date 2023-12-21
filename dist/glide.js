@@ -28,6 +28,7 @@ const electron_1 = require("electron");
 const path = __importStar(require("path"));
 const utils_1 = require("./utils");
 const menuShortcut_1 = require("./menuShortcut");
+const templateGen_1 = require("./templateGen");
 class Glide {
     constructor(settings) {
         this.settings = settings;
@@ -67,6 +68,11 @@ class Glide {
             this.glideView.webContents.toggleDevTools();
         });
         this.webpage.setMenu((0, menuShortcut_1.getMenuShortcuts)(this));
+        // gen files
+        (0, templateGen_1.genFromTemplateFile)(path.join(__dirname, 'templates/css/style.css.template'), path.join(__dirname, 'glide-pages/css/style.css'), {
+            'settings.theme.bg': this.settings.theme.bg,
+            'settings.theme.fg': this.settings.theme.fg,
+        });
     }
     openUrl(url = this.url) {
         if (url.startsWith('glide://')) {

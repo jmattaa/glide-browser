@@ -4,8 +4,8 @@
 */
 
 :root {
-    --glide-bg: 12, 15, 11;
-    --glide-fg: 255, 255, 255;
+    --glide-bg: #{settings.theme.bg};
+    --glide-fg: #{settings.theme.fg};
 }
 
 * {

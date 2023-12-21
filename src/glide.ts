@@ -2,6 +2,7 @@ import { BrowserWindow, BrowserView, ipcMain } from 'electron';
 import * as path from 'path';
 import { formatUrl } from './utils';
 import { getMenuShortcuts } from './menuShortcut';
+import { genFromTemplateFile } from './templateGen';
 
 export class Glide {
     public url: string;
@@ -57,6 +58,16 @@ export class Glide {
             });
 
         this.webpage.setMenu(getMenuShortcuts(this));
+
+        // gen files
+        genFromTemplateFile(
+            path.join(__dirname, 'templates/css/style.css.template'),
+            path.join(__dirname, 'glide-pages/css/style.css'),
+            {
+                'settings.theme.bg': this.settings.theme.bg,
+                'settings.theme.fg': this.settings.theme.fg,
+            }
+        );
     }
 
     public openUrl(url = this.url) {

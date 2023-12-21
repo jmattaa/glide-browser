@@ -1,7 +1,7 @@
 {
     "theme": {
-        "fg": "12, 15, 11",
-        "bg": "255, 255, 255"
+        "bg": "12, 15, 11",
+        "fg": "255, 255, 255"
     },
     "autohideMenu": true,
     "defaultUrl": "glide://home"
