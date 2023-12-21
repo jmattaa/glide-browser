@@ -50,12 +50,7 @@ export class Glide {
             vertical: true
         });
 
-        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'))
-            .then(() => {
-                this.glideView.webContents.send(
-                    'main-open', { settings: this.settings })
-                this.glideView.webContents.toggleDevTools();
-            });
+        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
 
         this.webpage.setMenu(getMenuShortcuts(this));
 
