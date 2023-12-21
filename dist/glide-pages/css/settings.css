@@ -1,0 +1,43 @@
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+
+    align-items: center;
+}
+
+.title {
+    padding: 2em;
+    width: 20%;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #00000000;
+    border-radius: 5px;
+    background: rgba(var(--glide-fg), .1);
+    transition: border 255ms ease-in-out;
+}
+
+input[type="checkbox"] {
+    width: auto;
+}
+
+input:focus {
+    outline: none;
+    border: 1px solid rgba(var(--glide-fg), .3);
+}
+
+#settingsForm {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+

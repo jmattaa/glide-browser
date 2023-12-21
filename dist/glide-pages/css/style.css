@@ -9,6 +9,7 @@
 }
 
 * {
+    font-family: 'Arial', sans-serif;
     background-color: rgb(var(--glide-bg));
     color: rgb(var(--glide-fg));
 }
