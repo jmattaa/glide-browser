@@ -1,5 +1,5 @@
 export function formatUrl(input: string): string {
-    const domainRegex = /\.(com|org|net|gov|edu|co\.uk)$/i;
+    const domainRegex = /\.(.*)$/i;
 
     if (domainRegex.test(input)) {
         if (!/^https?:\/\//i.test(input)) {

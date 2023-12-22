@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CmdOrCtrl = exports.formatUrl = void 0;
 function formatUrl(input) {
-    const domainRegex = /\.(com|org|net|gov|edu|co\.uk)$/i;
+    const domainRegex = /\.(.*)$/i;
     if (domainRegex.test(input)) {
         if (!/^https?:\/\//i.test(input)) {
             input = "https://" + input;
