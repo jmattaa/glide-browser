@@ -72,7 +72,6 @@ class Glide {
             vertical: true
         });
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
-        this.glideView.webContents.toggleDevTools();
         this.webpage.setMenu((0, menuShortcut_1.getMenuShortcuts)(this));
         // settings change
         electron_1.ipcMain.on('change-settings', (_event, { setting, value }) => {
