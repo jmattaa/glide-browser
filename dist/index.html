@@ -51,21 +51,25 @@
 
         const {ipcRenderer} = window.require('electron');
 
-        ipcRenderer.on('searchbar-open', (evt, value) => {
+        ipcRenderer.on('searchbar-open', (_e, {url}) => {
             searchContainer.style.opacity = 1;
             searchContainer.disabled = false;
             searchInput.focus();
-            searchInput.value = value.url;
+            searchInput.value = url;
         });
 
         window.addEventListener('keydown', async (event) => {
             if (event.key === 'Enter') {
                 searchContainer.style.opacity = 0;
-                await new Promise(r => setTimeout(r, 255)); // sleep until we donw with animation
+
+                // sleep until we donw with animation
+                await new Promise(r => setTimeout(r, 255));
                 ipcRenderer.send('searchbar-enter', searchInput.value);
             } else if (event.key === 'Escape') {
                 searchContainer.style.opacity = 0;
-                await new Promise(r => setTimeout(r, 255)); // sleep until we donw with animation
+
+                // sleep until we donw with animation
+                await new Promise(r => setTimeout(r, 255)); 
                 ipcRenderer.send('searchbar-escape');
             }
         });

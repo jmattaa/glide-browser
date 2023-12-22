@@ -19,3 +19,7 @@ export function formatUrl(input: string): string {
     return input;
 }
 
+export function CmdOrCtrl(key: string) {
+    return process.platform === 'darwin' ?  `Cmd+${key}` : `Ctrl+${key}`;
+}
+
