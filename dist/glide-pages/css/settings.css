@@ -1,4 +1,10 @@
 body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+main {
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -7,8 +13,7 @@ body {
 }
 
 .title {
-    padding: 2em;
-    width: 20%;
+    padding: 2em 0;
 }
 
 label {
@@ -37,7 +42,23 @@ input:focus {
 #settingsForm {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    width: 90%;
     margin: 0;
 }
 
+.banner {
+    display: none;
+    
+    padding: 1em;
+    position: sticky;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    background-color: rgb(250, 103, 43);
+}
+
+.banner * {
+    background-color: rgb(250, 103, 43);
+    color: rgb(var(--glide-bg));
+}

@@ -61,11 +61,15 @@
         window.addEventListener('keydown', async (event) => {
             if (event.key === 'Enter') {
                 searchContainer.style.opacity = 0;
-                await new Promise(r => setTimeout(r, 255)); // sleep until we donw with animation
+
+                // sleep until we donw with animation
+                await new Promise(r => setTimeout(r, 255));
                 ipcRenderer.send('searchbar-enter', searchInput.value);
             } else if (event.key === 'Escape') {
                 searchContainer.style.opacity = 0;
-                await new Promise(r => setTimeout(r, 255)); // sleep until we donw with animation
+
+                // sleep until we donw with animation
+                await new Promise(r => setTimeout(r, 255)); 
                 ipcRenderer.send('searchbar-escape');
             }
         });

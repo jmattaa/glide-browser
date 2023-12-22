@@ -1,43 +1,38 @@
-import data from '../../user/settings.json' assert { type: 'json' };
-
-const settings = data || {
-    "theme": {
-        "bg": "12, 15, 11",
-        "fg": "255, 255, 255",
-    },
-    "autohideMenu": true,
-    "defaultUrl": "glide://home",
-};
+import data from "../../user/settings.json" assert { type: "json" };
+const { ipcRenderer } = window.require("electron");
 
 const formElement = document.getElementById("settingsForm");
+const settingsBanner = document.querySelector(".banner");
+
+const settings = data;
+
+createSettingsForm(settings);
 
 function createInput(key, value) {
     const container = document.createElement("div");
 
-    if (typeof value === "object") {
-        for (const subKey in value) {
-            if (value.hasOwnProperty(subKey)) {
-                createInput(`${key}: ${subKey}`, value[subKey]);
-            }
-        }
-    }
-    else {
-        const label = document.createElement("label");
-        label.textContent = key;
-        container.appendChild(label);
+    const label = document.createElement("label");
+    label.textContent = key;
+    container.appendChild(label);
 
-        if (typeof value === "boolean") {
-            const input = document.createElement("input");
-            input.type = "checkbox";
-            input.checked = value;
-            container.appendChild(input);
-        } else {
-            const input = document.createElement("input");
-            input.type = "text";
-            input.value = value;
-            container.appendChild(input);
-        }
+    if (typeof value === "boolean") {
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = value;
+        input.addEventListener("change",
+            () => changeSetting(key, input.checked));
+
+        container.appendChild(input);
+    } else {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = value;
+        input.addEventListener("keyup",
+            () => changeSetting(key, input.value));
+
+        container.appendChild(input);
     }
+
     formElement.appendChild(container);
 }
 
@@ -49,5 +44,9 @@ function createSettingsForm(settings) {
     }
 }
 
-createSettingsForm(settings);
+function changeSetting(setting, value) {
+    ipcRenderer.send("change-settings", { setting, value });
 
+    // show banner
+    settingsBanner.style.display = 'block';
+}

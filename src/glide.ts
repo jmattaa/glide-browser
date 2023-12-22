@@ -1,8 +1,10 @@
 import { BrowserWindow, BrowserView, ipcMain } from 'electron';
+import fs from 'fs';
 import * as path from 'path';
 import { formatUrl } from './utils';
 import { getMenuShortcuts } from './menuShortcut';
 import { genFromTemplateFile } from './templateGen';
+import { settingsPath } from './globals';
 
 export class Glide {
     public url: string;
@@ -17,6 +19,10 @@ export class Glide {
         this.webpage = new BrowserWindow({
             width: 800,
             height: 600,
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false,
+            },
             autoHideMenuBar: this.settings.autohideMenu,
         });
 
@@ -54,13 +60,22 @@ export class Glide {
 
         this.webpage.setMenu(getMenuShortcuts(this));
 
+        // settings change
+        ipcMain.on('change-settings', (_event, { setting, value }) => {
+            this.settings[setting] = value;
+
+            // write settings
+            let settingsJSON = JSON.stringify(this.settings);
+            fs.writeFileSync(settingsPath, settingsJSON);
+        });
+
         // gen files
         genFromTemplateFile(
             path.join(__dirname, 'templates/css/style.css.template'),
             path.join(__dirname, 'glide-pages/css/style.css'),
             {
-                'settings.theme.bg': this.settings.theme.bg,
-                'settings.theme.fg': this.settings.theme.fg,
+                'settings.theme.bg': this.settings['theme.bg'],
+                'settings.theme.fg': this.settings['theme.fg'],
             }
         );
     }

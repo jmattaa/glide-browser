@@ -22,13 +22,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Glide = void 0;
 const electron_1 = require("electron");
+const fs_1 = __importDefault(require("fs"));
 const path = __importStar(require("path"));
 const utils_1 = require("./utils");
 const menuShortcut_1 = require("./menuShortcut");
 const templateGen_1 = require("./templateGen");
+const globals_1 = require("./globals");
 class Glide {
     constructor(settings) {
         this.settings = settings;
@@ -36,6 +41,10 @@ class Glide {
         this.webpage = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false,
+            },
             autoHideMenuBar: this.settings.autohideMenu,
         });
         this.glideView = new electron_1.BrowserView({
@@ -64,10 +73,17 @@ class Glide {
         });
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
         this.webpage.setMenu((0, menuShortcut_1.getMenuShortcuts)(this));
+        // settings change
+        electron_1.ipcMain.on('change-settings', (_event, { setting, value }) => {
+            this.settings[setting] = value;
+            // write settings
+            let settingsJSON = JSON.stringify(this.settings);
+            fs_1.default.writeFileSync(globals_1.settingsPath, settingsJSON);
+        });
         // gen files
         (0, templateGen_1.genFromTemplateFile)(path.join(__dirname, 'templates/css/style.css.template'), path.join(__dirname, 'glide-pages/css/style.css'), {
-            'settings.theme.bg': this.settings.theme.bg,
-            'settings.theme.fg': this.settings.theme.fg,
+            'settings.theme.bg': this.settings['theme.bg'],
+            'settings.theme.fg': this.settings['theme.fg'],
         });
     }
     openUrl(url = this.url) {

@@ -1,12 +1,12 @@
 import { app, BrowserWindow } from 'electron';
-import * as path from 'path';
 import { Glide } from './glide';
 import fs from 'fs';
+import { settingsPath } from './globals';
 
 let glide: Glide;
 
 function createWindow() {
-    fs.readFile(path.join(__dirname, 'user/settings.json'), (err, res) => {
+    fs.readFile(settingsPath, (err, res) => {
         if (err)
             throw Error(err + '\r\nGLIDE NOT INSTALLED CORRECTLY!');
 
