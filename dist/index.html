@@ -19,24 +19,27 @@
             width: 100vw;
             height: 100vh;
             justify-content: center;
-            align-items: center;
-            background-color: rgba(var(--glide-bg), .8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            align-items: start;
+
+            padding: 10rem 0;
+
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
 
             opacity: 0;
-            transition: all 255ms ease-in;
+            transition: opacity 255ms ease-in;
         }
 
         #search-bar {
             font-size: 16px;
-            border: .3px solid rgba(var(--glide-fg), .29);
             border-radius: 10px;
             padding: .5rem;
             outline: none;
+            border: none;
             box-sizing: border-box;
-            background-color: transparent;
-            width: 60%;
+
+            background-color: rgb(var(--glide-bg));
+            width: 30%;
         }
     </style>
 </head>
@@ -69,7 +72,7 @@
                 searchContainer.style.opacity = 0;
 
                 // sleep until we donw with animation
-                await new Promise(r => setTimeout(r, 255)); 
+                await new Promise(r => setTimeout(r, 255));
                 ipcRenderer.send('searchbar-escape');
             }
         });
