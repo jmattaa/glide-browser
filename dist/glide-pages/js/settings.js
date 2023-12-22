@@ -12,7 +12,7 @@ function createInput(key, value) {
     const container = document.createElement("div");
 
     const label = document.createElement("label");
-    label.textContent = key;
+    label.textContent = key.replaceAll("-", " ");
     container.appendChild(label);
 
     if (typeof value === "boolean") {

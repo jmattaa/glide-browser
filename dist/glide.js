@@ -37,7 +37,7 @@ const globals_1 = require("./globals");
 class Glide {
     constructor(settings) {
         this.settings = settings;
-        this.url = this.settings.defaultUrl;
+        this.url = this.settings['default-url'];
         this.webpage = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
@@ -45,7 +45,7 @@ class Glide {
                 nodeIntegration: true,
                 contextIsolation: false,
             },
-            autoHideMenuBar: this.settings.autohideMenu,
+            autoHideMenuBar: this.settings['auto-hide-menu'],
         });
         this.glideView = new electron_1.BrowserView({
             webPreferences: {
@@ -92,15 +92,36 @@ class Glide {
             this.openGlideUrl();
             return;
         }
-        this.url = (0, utils_1.formatUrl)(url);
-        if (this.url === '') {
-            this.openDefaultUrl();
-            return;
+        else if ((0, utils_1.isDomain)(url) || (0, utils_1.isUrl)(url)) {
+            this.url = (0, utils_1.formatUrl)(url);
+        }
+        else {
+            // searching using searchengine
+            if (this.url === '') {
+                this.openDefaultUrl();
+                return;
+            }
+            const formattedQuery = url.split(' ').join('+');
+            let baseUrl;
+            switch (this.settings['search-engine']) {
+                case 'google':
+                    baseUrl = 'https://www.google.com/search?q=';
+                    break;
+                case 'bing':
+                    baseUrl = 'https://www.bing.com/search?q=';
+                    break;
+                case 'duckduckgo':
+                    baseUrl = 'https://duckduckgo.com/?q=';
+                    break;
+                default:
+                    baseUrl = 'https://duckduckgo.com/?q=';
+            }
+            this.url = baseUrl + formattedQuery;
         }
         this.webpage.loadURL(this.url);
     }
     openDefaultUrl() {
-        this.openUrl(this.settings.defaultUrl);
+        this.openUrl(this.settings['default-url']);
     }
     showUrlbar() {
         this.webpage.setBrowserView(this.glideView);

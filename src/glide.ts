@@ -1,7 +1,7 @@
 import { BrowserWindow, BrowserView, ipcMain } from 'electron';
 import fs from 'fs';
 import * as path from 'path';
-import { formatUrl } from './utils';
+import { formatUrl, isDomain, isUrl } from './utils';
 import { getMenuShortcuts } from './menuShortcut';
 import { genFromTemplateFile } from './templateGen';
 import { settingsPath } from './globals';
@@ -14,7 +14,7 @@ export class Glide {
 
     constructor(settings: any) {
         this.settings = settings;
-        this.url = this.settings.defaultUrl;
+        this.url = this.settings['default-url'];
 
         this.webpage = new BrowserWindow({
             width: 800,
@@ -23,7 +23,7 @@ export class Glide {
                 nodeIntegration: true,
                 contextIsolation: false,
             },
-            autoHideMenuBar: this.settings.autohideMenu,
+            autoHideMenuBar: this.settings['auto-hide-menu'],
         });
 
         this.glideView = new BrowserView({
@@ -85,19 +85,40 @@ export class Glide {
             this.url = url;
             this.openGlideUrl();
             return;
-        }
+        } else if (isDomain(url) || isUrl(url)) {
+            this.url = formatUrl(url);
+        } else {
+            // searching using searchengine
+            if (this.url === '') {
+                this.openDefaultUrl();
+                return
+            }
 
-        this.url = formatUrl(url);
-        if (this.url === '') {
-            this.openDefaultUrl();
-            return
+            const formattedQuery: string = url.split(' ').join('+');
+            let baseUrl;
+
+            switch (this.settings['search-engine']) {
+                case 'google':
+                    baseUrl = 'https://www.google.com/search?q=';
+                    break;
+                case 'bing':
+                    baseUrl = 'https://www.bing.com/search?q=';
+                    break;
+                case 'duckduckgo':
+                    baseUrl = 'https://duckduckgo.com/?q=';
+                    break;
+                default:
+                    baseUrl = 'https://duckduckgo.com/?q=';
+            }
+
+            this.url = baseUrl + formattedQuery;
         }
 
         this.webpage.loadURL(this.url);
     }
 
     public openDefaultUrl() {
-        this.openUrl(this.settings.defaultUrl);
+        this.openUrl(this.settings['default-url']);
     }
 
     public showUrlbar() {
