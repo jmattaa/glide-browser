@@ -13,7 +13,7 @@
         }
     },
     "scripts": {
-        "build": "tsc",
+        "build": "tsc && node ./scripts/setupDist.js",
         "start": "npm run build && electron .",
         "buildMacIntel": "npm run build && node ./scripts/buildMac.js --platform=x64",
         "buildMacArm": "npm run build && node ./scripts/buildMac.js --platform=arm64",

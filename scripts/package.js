@@ -1,3 +1,4 @@
+const fs = require('fs');
 const packager = require('electron-packager');
 const path = require('path');
 
