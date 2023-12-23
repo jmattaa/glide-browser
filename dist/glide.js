@@ -41,11 +41,14 @@ class Glide {
         this.webpage = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
+            transparent: true,
+            frame: false,
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
             },
             autoHideMenuBar: this.settings['auto-hide-menu'],
+            titleBarStyle: this.settings['titlebar-hidden'] ? 'customButtonsOnHover' : 'default',
         });
         this.glideView = new electron_1.BrowserView({
             webPreferences: {
@@ -145,9 +148,14 @@ class Glide {
     }
     goBack() {
         this.webpage.webContents.goBack();
+        this.url = this.webpage.webContents.getURL();
     }
     goForward() {
         this.webpage.webContents.goForward();
+        this.url = this.webpage.webContents.getURL();
+    }
+    fitScreen() {
+        this.webpage.maximize();
     }
     openGlideUrl(url = this.url) {
         this.url = url;

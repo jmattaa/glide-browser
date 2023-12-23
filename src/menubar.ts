@@ -5,13 +5,26 @@ import { CmdOrCtrl, isMac } from "./utils"
 
 export function getMenubar(glide: Glide): Menu {
     const menuTempalate: (MenuItemConstructorOptions | MenuItem)[] = [
-        // mocos stuff
-        ...(isMac
-            ? [{
-                label: app.name,
-                submenu: [
-                    { role: 'about' },
-                    { type: 'separator' },
+        {
+            label: app.name,
+            submenu: [
+                { role: 'about' },
+                { type: 'separator' },
+                {
+                    label: 'Fit screen',
+                    accelerator: CmdOrCtrl('Shift+F'),
+                    click: () => { glide.fitScreen() },
+                },
+                {
+                    label: 'Open Settings',
+                    accelerator: CmdOrCtrl(','),
+                    click: () => {
+                        glide.openGlideUrl('glide://settings');
+                    }
+                },
+                { type: 'separator' },
+                // mocos stuff
+                ...(isMac ? [
                     { role: 'services' },
                     { type: 'separator' },
                     { role: 'hide' },
@@ -19,9 +32,9 @@ export function getMenubar(glide: Glide): Menu {
                     { role: 'unhide' },
                     { type: 'separator' },
                     { role: 'quit' }
-                ]
-            } as MenuItemConstructorOptions]
-            : []),
+                ] : [])
+            ] as MenuItemConstructorOptions[]
+        },
         {
             // this gives us default shortcuts
             label: 'View',
@@ -58,18 +71,6 @@ export function getMenubar(glide: Glide): Menu {
                 },
             ],
         },
-        {
-            label: 'Settings',
-            submenu: [
-                {
-                    label: 'Open Settings',
-                    accelerator: CmdOrCtrl(','),
-                    click: () => {
-                        glide.openGlideUrl('glide://settings');
-                    }
-                }
-            ]
-        }
     ];
 
     const menu = Menu.buildFromTemplate(menuTempalate);

@@ -10,6 +10,6 @@
 
 * {
     font-family: 'Arial', sans-serif;
-    background-color: rgb(var(--glide-bg));
+    background-color: rgba(var(--glide-bg), .7);
     color: rgb(var(--glide-fg));
 }

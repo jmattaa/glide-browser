@@ -19,11 +19,15 @@ export class Glide {
         this.webpage = new BrowserWindow({
             width: 800,
             height: 600,
+            transparent: true,
+            frame: false,
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
             },
             autoHideMenuBar: this.settings['auto-hide-menu'],
+            titleBarStyle:
+                this.settings['titlebar-hidden'] ? 'customButtonsOnHover' : 'default',
         });
 
         this.glideView = new BrowserView({
@@ -148,10 +152,16 @@ export class Glide {
 
     public goBack() {
         this.webpage.webContents.goBack();
+        this.url = this.webpage.webContents.getURL();
     }
 
     public goForward() {
         this.webpage.webContents.goForward();
+        this.url = this.webpage.webContents.getURL();
+    }
+
+    public fitScreen() {
+        this.webpage.maximize();
     }
 
     openGlideUrl(url = this.url) {
