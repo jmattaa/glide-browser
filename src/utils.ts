@@ -33,7 +33,8 @@ export function isDomain(input: string) {
     return domainRegex.test(input);
 }
 
-export function CmdOrCtrl(key: string) {
-    return process.platform === 'darwin' ? `Cmd+${key}` : `Ctrl+${key}`;
-}
+export const isMac = process.platform === 'darwin';
 
+export function CmdOrCtrl(key: string) {
+    return isMac ? `Cmd+${key}` : `Ctrl+${key}`;
+}

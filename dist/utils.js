@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CmdOrCtrl = exports.isDomain = exports.isUrl = exports.formatUrl = void 0;
+exports.CmdOrCtrl = exports.isMac = exports.isDomain = exports.isUrl = exports.formatUrl = void 0;
 const domainRegex = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)*$/;
 function formatUrl(input) {
     if (domainRegex.test(input)) {
@@ -32,7 +32,8 @@ function isDomain(input) {
     return domainRegex.test(input);
 }
 exports.isDomain = isDomain;
+exports.isMac = process.platform === 'darwin';
 function CmdOrCtrl(key) {
-    return process.platform === 'darwin' ? `Cmd+${key}` : `Ctrl+${key}`;
+    return exports.isMac ? `Cmd+${key}` : `Ctrl+${key}`;
 }
 exports.CmdOrCtrl = CmdOrCtrl;

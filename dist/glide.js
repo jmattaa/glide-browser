@@ -72,7 +72,9 @@ class Glide {
             vertical: true
         });
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
-        this.webpage.setMenu((0, menubar_1.getMenubar)(this));
+        const menubar = (0, menubar_1.getMenubar)(this);
+        this.webpage.setMenu(menubar);
+        electron_1.Menu.setApplicationMenu(menubar);
         // settings change
         electron_1.ipcMain.on('change-settings', (_event, { setting, value }) => {
             this.settings[setting] = value;

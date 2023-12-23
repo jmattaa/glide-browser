@@ -1,4 +1,4 @@
-import { BrowserWindow, BrowserView, ipcMain } from 'electron';
+import { BrowserWindow, BrowserView, ipcMain, Menu } from 'electron';
 import fs from 'fs';
 import * as path from 'path';
 import { formatUrl, isDomain, isUrl } from './utils';
@@ -58,7 +58,9 @@ export class Glide {
 
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
 
-        this.webpage.setMenu(getMenubar(this));
+        const menubar = getMenubar(this);
+        this.webpage.setMenu(menubar);
+        Menu.setApplicationMenu(menubar);
 
         // settings change
         ipcMain.on('change-settings', (_event, { setting, value }) => {

@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import { Glide } from './glide';
 import fs from 'fs';
 import { settingsPath } from './globals';
+import { isMac } from './utils';
 
 let glide: Glide;
 
@@ -26,7 +27,7 @@ app.on('ready', () => {
 
 // more macos stuff
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
+    if (!isMac) {
         app.quit();
     }
 });
