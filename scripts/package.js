@@ -4,11 +4,11 @@ const path = require('path');
 function getPlatformIconPath(platform) {
     switch (platform) {
         case 'darwin':
-            return path.join(process.cwd(), 'assets/icons/icon.icns');
+            return path.join(process.cwd(), 'assets', 'icons', 'icon.icns');
         case 'win32':
-            return path.join(process.cwd(), 'assets/icons/icon.ico');
+            return path.join(process.cwd(), 'assets', 'icons', 'icon.ico');
         case 'linux':
-            return path.join(process.cwd(), 'assets/icons/icon.png');
+            return path.join(process.cwd(), 'assets', 'icons', 'icon.png');
     }
 }
 

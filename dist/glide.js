@@ -81,7 +81,7 @@ class Glide {
             fs_1.default.writeFileSync(globals_1.settingsPath, settingsJSON);
         });
         // gen files
-        (0, templateGen_1.genFromTemplateFile)(path.join(__dirname, 'templates/css/style.css.template'), path.join(__dirname, 'glide-pages/css/style.css'), {
+        (0, templateGen_1.genFromTemplateFile)(path.join(__dirname, 'templates', 'css', 'style.css.template'), path.join(__dirname, 'glide-pages', 'css', 'style.css'), {
             'settings.theme.bg': this.settings['theme.bg'],
             'settings.theme.fg': this.settings['theme.fg'],
         });
@@ -153,7 +153,7 @@ class Glide {
             this.openDefaultUrl();
             return;
         }
-        const filename = 'glide-pages/' + this.url.replace('glide://', '') + '.html';
+        const filename = path.join('glide-pages', this.url.replace('glide://', '') + '.html');
         this.webpage.loadFile(path.join(__dirname, filename));
     }
 }

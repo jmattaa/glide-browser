@@ -13,7 +13,7 @@ require('./package.js')('darwin', platform).then(function(packagePaths) {
         execSync('codesign -s - -a arm64 -f --deep ' + packagePath + '/glide.app');
     }
 
-    const binDir = path.join(process.cwd(), 'releases/bin/mac');
+    const binDir = path.join(process.cwd(), 'releases', 'bin', 'mac');
     if (!fs.existsSync(binDir)) {
         fs.mkdirSync(binDir);
     }

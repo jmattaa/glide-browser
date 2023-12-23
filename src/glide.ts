@@ -71,8 +71,8 @@ export class Glide {
 
         // gen files
         genFromTemplateFile(
-            path.join(__dirname, 'templates/css/style.css.template'),
-            path.join(__dirname, 'glide-pages/css/style.css'),
+            path.join(__dirname, 'templates', 'css', 'style.css.template'),
+            path.join(__dirname, 'glide-pages', 'css', 'style.css'),
             {
                 'settings.theme.bg': this.settings['theme.bg'],
                 'settings.theme.fg': this.settings['theme.fg'],
@@ -159,7 +159,7 @@ export class Glide {
             return;
         }
 
-        const filename = 'glide-pages/' + this.url.replace('glide://', '') + '.html';
+        const filename = path.join('glide-pages', this.url.replace('glide://', '') + '.html');
         this.webpage.loadFile(path.join(__dirname, filename));
     }
 }

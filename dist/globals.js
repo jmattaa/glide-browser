@@ -25,4 +25,4 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.settingsPath = void 0;
 const path = __importStar(require("path"));
-exports.settingsPath = path.join(__dirname, 'user/settings.json');
+exports.settingsPath = path.join(__dirname, 'user', 'settings.json');
