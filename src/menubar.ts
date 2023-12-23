@@ -2,7 +2,7 @@ import { Menu, MenuItem } from "electron"
 import { Glide } from "./glide"
 import { CmdOrCtrl } from "./utils"
 
-export function getMenuShortcuts(glide: Glide) {
+export function getMenubar(glide: Glide) {
     const menu = new Menu()
 
     // this gives us default shortcuts

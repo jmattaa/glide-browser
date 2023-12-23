@@ -31,7 +31,7 @@ const electron_1 = require("electron");
 const fs_1 = __importDefault(require("fs"));
 const path = __importStar(require("path"));
 const utils_1 = require("./utils");
-const menuShortcut_1 = require("./menuShortcut");
+const menubar_1 = require("./menubar");
 const templateGen_1 = require("./templateGen");
 const globals_1 = require("./globals");
 class Glide {
@@ -72,7 +72,7 @@ class Glide {
             vertical: true
         });
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
-        this.webpage.setMenu((0, menuShortcut_1.getMenuShortcuts)(this));
+        this.webpage.setMenu((0, menubar_1.getMenubar)(this));
         // settings change
         electron_1.ipcMain.on('change-settings', (_event, { setting, value }) => {
             this.settings[setting] = value;

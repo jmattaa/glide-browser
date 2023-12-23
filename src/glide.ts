@@ -2,7 +2,7 @@ import { BrowserWindow, BrowserView, ipcMain } from 'electron';
 import fs from 'fs';
 import * as path from 'path';
 import { formatUrl, isDomain, isUrl } from './utils';
-import { getMenuShortcuts } from './menuShortcut';
+import { getMenubar } from './menubar';
 import { genFromTemplateFile } from './templateGen';
 import { settingsPath } from './globals';
 
@@ -58,7 +58,7 @@ export class Glide {
 
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
 
-        this.webpage.setMenu(getMenuShortcuts(this));
+        this.webpage.setMenu(getMenubar(this));
 
         // settings change
         ipcMain.on('change-settings', (_event, { setting, value }) => {
