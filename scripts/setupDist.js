@@ -16,4 +16,8 @@ fs.cpSync(
     path.join(process.cwd(), 'dist', 'glide-pages'),
     { recursive: true }
 );
-
+fs.cpSync(
+    path.join(process.cwd(), 'html-pages'),
+    path.join(process.cwd(), 'dist'),
+    { recursive: true }
+)

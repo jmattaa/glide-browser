@@ -19,8 +19,6 @@ export class Glide {
         this.webpage = new BrowserWindow({
             width: 800,
             height: 600,
-            transparent: true,
-            frame: false,
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,
@@ -29,6 +27,9 @@ export class Glide {
             titleBarStyle:
                 this.settings['titlebar-hidden'] ? 'customButtonsOnHover' : 'default',
         });
+
+        const menubar = getMenubar(this);
+        Menu.setApplicationMenu(menubar);
 
         this.glideView = new BrowserView({
             webPreferences: {
@@ -61,10 +62,6 @@ export class Glide {
         });
 
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
-
-        const menubar = getMenubar(this);
-        this.webpage.setMenu(menubar);
-        Menu.setApplicationMenu(menubar);
 
         // settings change
         ipcMain.on('change-settings', (_event, { setting, value }) => {

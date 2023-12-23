@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glide</title>
+    <link rel="stylesheet" href="./glide-pages/css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: transparent;
+        }
+
+        #search-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            justify-content: center;
+            align-items: start;
+
+            padding: 10rem 0;
+
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+
+            opacity: 0;
+            transition: opacity 255ms ease-in;
+        }
+
+        #search-bar {
+            font-size: 16px;
+            border-radius: 10px;
+            padding: .5rem;
+            outline: none;
+            border: none;
+            box-sizing: border-box;
+
+            background-color: rgb(var(--glide-bg));
+            width: 30%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="search-container">
+        <input type="text" id="search-bar" placeholder="">
+    </div>
+    <script>
+        const searchContainer = document.getElementById('search-container');
+        const searchInput = document.getElementById('search-bar');
+
+        const {ipcRenderer} = window.require('electron');
+
+        ipcRenderer.on('searchbar-open', (_e, {url}) => {
+            searchContainer.style.opacity = 1;
+            searchContainer.disabled = false;
+            searchInput.focus();
+            searchInput.value = url;
+        });
+
+        window.addEventListener('keydown', async (event) => {
+            if (event.key === 'Enter') {
+                searchContainer.style.opacity = 0;
+
+                // sleep until we donw with animation
+                await new Promise(r => setTimeout(r, 255));
+                ipcRenderer.send('searchbar-enter', searchInput.value);
+            } else if (event.key === 'Escape') {
+                searchContainer.style.opacity = 0;
+
+                // sleep until we donw with animation
+                await new Promise(r => setTimeout(r, 255));
+                ipcRenderer.send('searchbar-escape');
+            }
+        });
+    </script>
+</body>
+
+</html>
