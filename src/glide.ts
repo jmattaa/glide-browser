@@ -20,8 +20,7 @@ export class Glide {
             width: 800,
             height: 600,
             webPreferences: {
-                nodeIntegration: true,
-                contextIsolation: false,
+                nodeIntegration: false,
             },
             autoHideMenuBar: this.settings['auto-hide-menu'],
             titleBarStyle:
