@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #loading-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 90%;
+            height: 4px;
+            background-color: #0ffef0;
+            animation: fade 2s infinite ease-in-out;
+        }
+
+        @keyframes fade {
+            0% {opacity: 1;}
+            50% {opacity: 0;}
+            100% {opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-indicator"></div>
+</body>
+</html>

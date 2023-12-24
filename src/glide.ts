@@ -81,6 +81,47 @@ export class Glide {
                 'settings.theme.fg': this.settings['theme.fg'],
             }
         );
+
+        const loadingIndicator = new BrowserView();
+        loadingIndicator.setBounds({
+            x: (bounds.width / 2) - 40,
+            y: 0,
+            width: 40,
+            height: 4
+        });
+
+        this.glideView.setAutoResize({
+            width: true,
+            height: false,
+            horizontal: true,
+            vertical: true
+        });
+
+
+        this.webpage.addBrowserView(loadingIndicator);
+
+        this.webpage.webContents.on('did-start-loading', () => {
+            loadingIndicator.webContents.loadFile(path.join(__dirname, 'loading.html'));
+        });
+
+        this.webpage.webContents.on('did-stop-loading', () => {
+            // wait before we close
+            setTimeout(() => {
+                loadingIndicator.webContents.loadURL('about:blank');
+            }, 1000);
+        });
+
+        this.webpage.webContents.on('will-navigate', () => {
+            setTimeout(() => {
+                loadingIndicator.webContents.loadURL('about:blank');
+            }, 1000);
+        });
+
+        this.webpage.webContents.on('did-fail-load', () => {
+            setTimeout(() => {
+                loadingIndicator.webContents.loadURL('about:blank');
+            }, 1000);
+        });
     }
 
     public openUrl(url = this.url) {
@@ -125,7 +166,7 @@ export class Glide {
     }
 
     public showUrlbar() {
-        this.webpage.setBrowserView(this.glideView);
+        this.webpage.addBrowserView(this.glideView);
 
         this.glideView.setBounds({
             x: 0,
@@ -161,7 +202,7 @@ export class Glide {
         this.webpage.maximize();
     }
 
-    openGlideUrl(url = this.url) {
+    public openGlideUrl(url = this.url) {
         this.url = url;
         if (!this.url.startsWith('glide://')) {
             this.openDefaultUrl();
