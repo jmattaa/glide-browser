@@ -1,25 +1,44 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <link rel="stylesheet" href="./glide-pages/css/style.css">
     <style>
+        * {
+            background-color: transparent;
+            overflow: hidden;
+        }
+
         #loading-indicator {
             position: fixed;
             top: 0;
             left: 0;
-            width: 90%;
+            width: 100%;
+            border: 1px transparent;
+            border-radius: 2px;
             height: 4px;
-            background-color: #0ffef0;
+            background-color: rgba(var(--glide-fg), .56);
             animation: fade 2s infinite ease-in-out;
         }
 
         @keyframes fade {
-            0% {opacity: 1;}
-            50% {opacity: 0;}
-            100% {opacity: 1;}
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
     </style>
 </head>
+
 <body>
     <div id="loading-indicator"></div>
 </body>
+
 </html>

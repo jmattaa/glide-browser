@@ -83,43 +83,37 @@ export class Glide {
         );
 
         const loadingIndicator = new BrowserView();
-        loadingIndicator.setBounds({
-            x: (bounds.width / 2) - 40,
-            y: 0,
-            width: 40,
-            height: 4
-        });
 
-        this.glideView.setAutoResize({
-            width: true,
-            height: false,
-            horizontal: true,
-            vertical: true
-        });
-
-
-        this.webpage.addBrowserView(loadingIndicator);
+        loadingIndicator.webContents.loadFile(path.join(__dirname, 'loading.html'));
 
         this.webpage.webContents.on('did-start-loading', () => {
-            loadingIndicator.webContents.loadFile(path.join(__dirname, 'loading.html'));
+            const boundsWin = this.webpage.getBounds();
+            loadingIndicator.setBounds({
+                x: (boundsWin.width / 2) - Math.min(boundsWin.width / 2 - 60, 60),
+                y: 0,
+                width: Math.min(boundsWin.width / 2 - 60, 60),
+                height: 4
+            });
+
+            this.webpage.addBrowserView(loadingIndicator);
         });
 
         this.webpage.webContents.on('did-stop-loading', () => {
             // wait before we close
             setTimeout(() => {
-                loadingIndicator.webContents.loadURL('about:blank');
+                this.webpage.removeBrowserView(loadingIndicator);
             }, 1000);
         });
 
         this.webpage.webContents.on('will-navigate', () => {
             setTimeout(() => {
-                loadingIndicator.webContents.loadURL('about:blank');
+                this.webpage.removeBrowserView(loadingIndicator);
             }, 1000);
         });
 
         this.webpage.webContents.on('did-fail-load', () => {
             setTimeout(() => {
-                loadingIndicator.webContents.loadURL('about:blank');
+                this.webpage.removeBrowserView(loadingIndicator);
             }, 1000);
         });
     }
