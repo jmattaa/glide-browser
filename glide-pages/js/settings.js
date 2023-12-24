@@ -1,5 +1,4 @@
 import data from "../../user/settings.json" assert { type: "json" };
-const { ipcRenderer } = window.require("electron");
 
 const formElement = document.getElementById("settingsForm");
 const settingsBanner = document.querySelector(".banner");
@@ -45,7 +44,11 @@ function createSettingsForm(settings) {
 }
 
 function changeSetting(setting, value) {
-    ipcRenderer.send("change-settings", { setting, value });
+    window.postMessage({
+        myTypeField: 'change-settings',
+        setting,
+        value
+    });
 
     // show banner
     settingsBanner.style.display = 'block';

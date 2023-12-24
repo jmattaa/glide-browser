@@ -17,7 +17,7 @@ fs.cpSync(
     { recursive: true }
 );
 fs.cpSync(
-    path.join(process.cwd(), 'html-pages'),
+    path.join(process.cwd(), 'root-code'),
     path.join(process.cwd(), 'dist'),
     { recursive: true }
 )

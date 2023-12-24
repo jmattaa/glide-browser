@@ -20,6 +20,7 @@ export class Glide {
             width: 800,
             height: 600,
             webPreferences: {
+                preload: path.join(__dirname, 'preload.js'),
                 nodeIntegration: false,
             },
             autoHideMenuBar: this.settings['auto-hide-menu'],
