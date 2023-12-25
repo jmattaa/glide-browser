@@ -1,6 +1,6 @@
 import { Menu, MenuItem, MenuItemConstructorOptions, app } from "electron"
 import { Glide } from "./glide"
-import { CmdOrCtrl, MacCtrlOrAlt, isMac } from "./utils"
+import { CmdOrCtrl, isMac } from "./utils"
 
 
 export function getMenubar(glide: Glide): Menu {
@@ -79,12 +79,12 @@ export function getMenubar(glide: Glide): Menu {
                 },
                 {
                     label: 'Next Tab',
-                    accelerator: MacCtrlOrAlt('Tab'),
+                    accelerator: 'Ctrl+Tab',
                     click: () => { glide.NextTab() }
                 },
                 {
                     label: 'Previous Tab',
-                    accelerator: MacCtrlOrAlt('Shift+Tab'),
+                    accelerator: 'Ctrl+Shift+Tab',
                     click: () => { glide.prevTab() }
                 }
             ]

@@ -38,7 +38,3 @@ export const isMac = process.platform === 'darwin';
 export function CmdOrCtrl(key: string) {
     return isMac ? `Cmd+${key}` : `Ctrl+${key}`;
 }
-
-export function MacCtrlOrAlt(key: string) {
-    return isMac ? `Ctrl+${key}` : `Alt+${key}`;
-}

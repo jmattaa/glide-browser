@@ -41,7 +41,12 @@ export class TabStack {
             return;
 
         this.state.tabs.splice(tabIdx, 1);
-        this.switch(this.state.tabs[0].id || -1);
+
+        this.switch(
+            this.state.tabs[
+                tabIdx - 1 > 0 ? tabIdx - 1 : 0
+            ].id || -1
+        );
     }
 
     public update(tabId: number, newData: Tab) {

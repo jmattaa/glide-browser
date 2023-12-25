@@ -275,8 +275,6 @@ export class Glide {
             return;
 
         this.tabStack.close(this.tabStack.state.currentTab.id);
-        this.tabStack.state.currentTab =
-            this.tabStack.state.tabs[this.tabStack.state.tabs.length - 1];
     }
 
     public prevTab() {
