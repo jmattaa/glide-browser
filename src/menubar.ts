@@ -36,12 +36,20 @@ export function getMenubar(glide: Glide): Menu {
             ] as MenuItemConstructorOptions[]
         },
         {
-            // this gives us default shortcuts
             label: 'View',
             submenu: [
                 { role: 'reload' },
                 { role: 'forceReload' },
-                { role: 'toggleDevTools' },
+                {
+                    label: 'Toggle Dev Tools',
+                    accelerator:
+                        isMac ? 'Cmd+Option+I' : 'Alt+Shift+I',
+                    click: () => {
+                        glide.webpage.webContents.openDevTools({
+                            mode: 'undocked'
+                        });
+                    }
+                },
                 { type: 'separator' },
                 { role: 'resetZoom' },
                 { role: 'zoomIn' },
@@ -49,6 +57,42 @@ export function getMenubar(glide: Glide): Menu {
                 { type: 'separator' },
                 { role: 'togglefullscreen' }
             ],
+        },
+        {
+            label: 'Tabs',
+            submenu: [
+                {
+                    label: 'Show Url',
+                    accelerator: CmdOrCtrl('L'),
+                    click: () => { glide.showUrlbar() }
+                },
+                { type: 'separator' },
+                {
+                    label: 'New Tab',
+                    accelerator: CmdOrCtrl('T'),
+                    click: () => { glide.addNewTab() }
+                },
+                {
+                    label: 'Close Current Tab',
+                    accelerator: CmdOrCtrl('W'),
+                    click: () => { glide.closeCurrentTab() }
+                },
+                {
+                    label: 'Next Tab',
+                    accelerator: 'Ctrl+Tab',
+                    click: () => { glide.NextTab() }
+                },
+                {
+                    label: 'Previous Tab',
+                    accelerator: 'Ctrl+Shift+Tab',
+                    click: () => { glide.prevTab() }
+                },
+                {
+                    label: 'Show All Tabs',
+                    accelerator: CmdOrCtrl('Shift+L'),
+                    click: () => { glide.openTabsWindow() }
+                }
+            ]
         },
         {
             label: 'Archive',
