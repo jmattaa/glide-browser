@@ -117,4 +117,15 @@ export class TabStack {
 
         this.state.tabs.splice(tabIdx, 1);
     }
+
+    public openBgTab(tab: Tab) {
+        // store the current tab cuz dis is what we want
+        const currentTab = this.state.currentTab.id;
+        if (!currentTab)
+            return;
+
+        this.add(tab);
+
+        this.switch(currentTab);
+    }
 }

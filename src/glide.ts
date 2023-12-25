@@ -1,4 +1,4 @@
-import { BrowserWindow, BrowserView, ipcMain, Menu } from 'electron';
+import { BrowserWindow, BrowserView, ipcMain, Menu, HandlerDetails, desktopCapturer } from 'electron';
 import fs from 'fs';
 import * as path from 'path';
 import { formatUrl, isDomain, isUrl } from './utils';
@@ -77,7 +77,8 @@ export class Glide {
             if (url.startsWith('file://' + path.join(__dirname, 'glide-pages')))
                 return;
 
-            this.url = url
+            this.url = url;
+            this.tabStack.state.currentTab.url = url;
         });
 
         // settings change
@@ -152,6 +153,31 @@ export class Glide {
 
         ipcMain.on('searchbar-escape', () => {
             this.appwindow.removeBrowserView(this.glideView);
+        })
+
+        // dont open extra windows for links
+        // one window is already too much for me to handle :>
+        this.webpage.webContents.setWindowOpenHandler((details: HandlerDetails) => {
+            const tab: Tab = {
+                url: details.url,
+                title: '',
+                webpage: this.webpage,
+            };
+
+            // open bg tab and dont switch to it
+            if (details.disposition === 'background-tab') {
+                this.tabStack.openBgTab(tab);
+            }
+            // open fg tab so we switch to it
+            else if (
+                details.disposition === 'foreground-tab' ||
+                details.disposition === 'new-window'
+            ) {
+                this.tabStack.add(tab);
+            }
+
+            console.log(this.tabStack.state);
+            return { action: 'deny' }
         })
     }
 
