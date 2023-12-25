@@ -71,14 +71,14 @@ export class Glide {
             vertical: true
         });
 
+        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
+
         this.webpage.webContents.on('did-navigate', (_event, url) => {
             if (url.startsWith('file://' + path.join(__dirname, 'glide-pages')))
                 return;
 
             this.url = url
         });
-
-        this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
 
         // settings change
         ipcMain.on('change-settings', (_event, { setting, value }) => {

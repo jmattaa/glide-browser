@@ -7,7 +7,7 @@ export interface Tab {
     webpage: BrowserView
     id?: number,
     lastActivity?: number,
-}
+};
 
 export class TabStack {
     private glide: Glide;
@@ -24,11 +24,14 @@ export class TabStack {
             currentTab: tab,
         }
         this.add(tab);
+
+        // initialize tab activity monitor
+        tabActivity.monitor(this);
     }
 
     public add(tab: Tab) {
         tab.id = Date.now() + Math.random();
-        tab.lastActivity = new Date().getTime();
+        tab.lastActivity = Date.now();
 
         this.state.tabs.push(tab);
 
@@ -79,6 +82,8 @@ export class TabStack {
         this.glide.appwindow.removeBrowserView(this.state.currentTab.webpage);
 
         this.state.currentTab = this.state.tabs[tabIdx];
+        // last active is now
+        this.state.currentTab.lastActivity = Date.now();
 
         this.glide.webpage = this.state.currentTab.webpage;
         this.glide.url = this.state.currentTab.url;
@@ -101,5 +106,38 @@ export class TabStack {
 
         // add the new one
         this.glide.appwindow.addBrowserView(this.state.currentTab.webpage);
+    }
+
+    // this is like close but we silently close without switching tabs
+    public remove(tabId: number) {
+        const tabIdx = this.getIdx(tabId);
+        if (tabIdx === -1)
+            return;
+
+        this.state.tabs.splice(tabIdx, 1);
+    }
+}
+
+// no need for a whole class can i just do this?
+const tabActivity = {
+    removeTime: 600000, // 10 min
+
+    monitor: (tabStack: TabStack) => {
+        setInterval(() => {
+            tabActivity._update(tabStack)
+        }, tabActivity.removeTime / 10);
+    },
+
+    _update: (tabStack: TabStack) => {
+        tabStack.state.tabs.forEach(tab => {
+            if (!tab.id)
+                return;
+            if (tabStack.state.currentTab.id === tab.id)
+                return;
+
+            if (Date.now() - (tab.lastActivity || 0) > tabActivity.removeTime) {
+                tabStack.remove(tab.id);
+            }
+        })
     }
 }
