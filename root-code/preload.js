@@ -1,12 +1,14 @@
 const { ipcRenderer } = require('electron');
 
-process.once('loaded', () => {
-  window.addEventListener('message', event => {
-    // do something with custom event
-    const message = event.data;
-
-    if (message.myTypeField === 'change-settings') {
-      ipcRenderer.send('change-settings', message);
+window.addEventListener('message', function(e) {
+    if (!e.origin.startsWith('file://')) {
+        return
     }
-  });
-});
+
+    const message = e.data;
+
+    if (message.name.startsWith('glide-ipc-')) {
+        const msgName = message.name.replace('glide-ipc-', '');
+        ipcRenderer.send(msgName, message.data);
+    }
+})

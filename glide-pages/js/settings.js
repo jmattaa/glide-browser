@@ -45,9 +45,11 @@ function createSettingsForm(settings) {
 
 function changeSetting(setting, value) {
     window.postMessage({
-        myTypeField: 'change-settings',
-        setting,
-        value
+        name: 'glide-ipc-change-settings',
+        data: {
+            setting,
+            value
+        },
     });
 
     // show banner
