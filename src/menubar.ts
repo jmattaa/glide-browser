@@ -86,6 +86,11 @@ export function getMenubar(glide: Glide): Menu {
                     label: 'Previous Tab',
                     accelerator: 'Ctrl+Shift+Tab',
                     click: () => { glide.prevTab() }
+                },
+                {
+                    label: 'Show All Tabs',
+                    accelerator: CmdOrCtrl('Shift+L'),
+                    click: () => { glide.openTabsWindow() }
                 }
             ]
         },

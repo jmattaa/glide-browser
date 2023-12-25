@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab Chooser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="tabList"></ul>
+    <script>
+        const {ipcRenderer} = require('electron');
+
+        const tabList = document.getElementById('tabList');
+
+        ipcRenderer.on('get-tabs', (event, data) => {
+            tabs = JSON.parse(data.tabs);
+            tabs.forEach(tab => {
+                const li = document.createElement('li');
+                li.textContent = `${tab.title}`;
+                li.addEventListener('click', () => {
+                    ipcRenderer.send('open-tab', tab.id);
+                    window.close();
+                });
+                tabList.appendChild(li);
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape')
+                ipcRenderer.send('close-tabs-win');
+        })
+
+    </script>
+</body>
+
+</html>

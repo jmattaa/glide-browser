@@ -15,6 +15,8 @@ export class Glide {
     public tabStack: TabStack;
     public settings: any;
 
+    private tabChooserWindow: BrowserWindow | null = null;
+
     constructor(settings: any) {
         this.settings = settings;
         this.url = this.settings['default-url'];
@@ -155,6 +157,15 @@ export class Glide {
             this.appwindow.removeBrowserView(this.glideView);
         })
 
+
+        ipcMain.on('open-tab', (_event, id) => {
+            this.tabStack.switch(id);
+            this.tabChooserWindow?.destroy();
+        });
+
+        ipcMain.on('close-tabs-win', () => {
+            this.tabChooserWindow?.destroy();
+        })
         // dont open extra windows for links
         // one window is already too much for me to handle :>
         this.webpage.webContents.setWindowOpenHandler((details: HandlerDetails) => {
@@ -176,7 +187,6 @@ export class Glide {
                 this.tabStack.add(tab);
             }
 
-            console.log(this.tabStack.state);
             return { action: 'deny' }
         })
     }
@@ -333,5 +343,31 @@ export class Glide {
             this.tabStack.state.tabs[newTabIdx].id || -1; // -1 shouldn't exist
 
         this.tabStack.switch(newTabId);
+    }
+
+    public openTabsWindow() {
+        this.tabChooserWindow = new BrowserWindow({
+            width: 300,
+            height: 400,
+            resizable: false,
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false,
+            },
+            titleBarStyle: 'customButtonsOnHover',
+            autoHideMenuBar: true,
+        });
+        this.tabChooserWindow.loadFile(path.join(__dirname, 'tabs.html'));
+
+        this.tabChooserWindow.on('blur', () => {
+            this.tabChooserWindow?.destroy();
+        });
+
+        this.tabChooserWindow.webContents.once('did-finish-load', () => {
+            this.tabChooserWindow?.webContents.send(
+                'get-tabs',
+                { tabs: JSON.stringify(this.tabStack.state.tabs) },
+            );
+        });
     }
 }
