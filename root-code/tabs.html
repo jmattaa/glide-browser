@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="./glide-pages/css/style.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
             padding: 20px;
         }
 
@@ -25,8 +24,13 @@
             border-radius: 5px;
         }
 
-        .selected-tab {
+        .current-tab {
             background: rgb(var(--glide-alt));
+        }
+
+        .inactive-tab {
+            color: rgb(var(--glide-alt));
+            border-color: rgb(var(--glide-alt));
         }
     </style>
 </head>
@@ -38,9 +42,9 @@
 
         const tabList = document.getElementById('tabList');
 
-        ipcRenderer.on('get-tabs', (event, stringData) => {
+        ipcRenderer.on('get-tabs', (event, rawData) => {
             tabList.innerHTML = '';
-            const tabState = JSON.parse(stringData.tabState);
+            const tabState = JSON.parse(rawData.tabState);
             const tabs = tabState.tabs;
 
             tabs.forEach(tab => {
@@ -51,7 +55,10 @@
                     window.close();
                 });
                 if (tabState.currentTab.id === tab.id)
-                    li.className = 'selected-tab';
+                    li.className = 'current-tab';
+                else if (Date.now() - tab.lastActivity >
+                    rawData.tabActivityTime / 2)
+                    li.className = 'inactive-tab';
                 tabList.appendChild(li);
             });
         });

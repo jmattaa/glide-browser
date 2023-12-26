@@ -96,9 +96,10 @@ export class TabStack {
 
         this.glide.closeTabsView();
 
-        this.state.currentTab = this.state.tabs[tabIdx];
-        // last active is now
+        // last active is now before we switch
         this.state.currentTab.lastActivity = Date.now();
+
+        this.state.currentTab = this.state.tabs[tabIdx];
 
         this.glide.webpage = this.state.currentTab.webpage;
         this.glide.url = this.state.currentTab.url;

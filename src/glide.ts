@@ -6,6 +6,7 @@ import { getMenubar } from './menubar';
 import { genFromTemplateFile } from './templateGen';
 import { settingsPath, webpageOpts } from './globals';
 import { Tab, TabStack } from './tabStack';
+import { tabActivity } from './tabActivity';
 
 export class Glide {
     public url: string;
@@ -326,7 +327,8 @@ export class Glide {
 
         if (this.tabChooserView)
             this.tabChooserView.webContents.send('get-tabs', {
-                tabState: JSON.stringify(this.tabStack.state)
+                tabState: JSON.stringify(this.tabStack.state),
+                tabActivity,
             });
     }
 
@@ -365,10 +367,10 @@ export class Glide {
         this.tabChooserView.webContents.loadFile(path.join(__dirname, 'tabs.html'));
 
         this.tabChooserView.webContents.on('did-finish-load', () => {
-            this.tabChooserView?.webContents.send(
-                'get-tabs',
-                { tabState: JSON.stringify(this.tabStack.state) },
-            );
+            this.tabChooserView?.webContents.send('get-tabs', {
+                tabState: JSON.stringify(this.tabStack.state),
+                tabActivityTime: tabActivity.removeTime,
+            });
         });
     }
 
