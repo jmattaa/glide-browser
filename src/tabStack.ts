@@ -94,6 +94,8 @@ export class TabStack {
         // remove old browserView
         this.glide.appwindow.removeBrowserView(this.state.currentTab.webpage);
 
+        this.glide.closeTabsView();
+
         this.state.currentTab = this.state.tabs[tabIdx];
         // last active is now
         this.state.currentTab.lastActivity = Date.now();
@@ -117,8 +119,6 @@ export class TabStack {
 
         // add the new one
         this.glide.appwindow.addBrowserView(this.glide.webpage);
-
-        this.glide.closeTabsView();
     }
 
     // this is like close but we silently close without switching tabs
