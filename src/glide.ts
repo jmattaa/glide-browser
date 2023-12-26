@@ -338,7 +338,7 @@ export class Glide {
                 contextIsolation: false
             },
         });
-        const tabsViewWidth = appwinBounds.width / 4;
+        const tabsViewWidth = Math.floor(appwinBounds.width / 4);
         this.tabChooserView.setBounds({
             x: 0,
             y: 0,
