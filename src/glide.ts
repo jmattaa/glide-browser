@@ -251,25 +251,12 @@ export class Glide {
     }
 
     public addNewTab() {
+        const newTabPage = new BrowserView(webpageOpts);
         this.tabStack.add({
             url: this.settings['default-url'],
             title: 'New tab',
-            webpage: new BrowserView(webpageOpts),
+            webpage: newTabPage,
         });
-
-        if (this.tabChooserView) {
-            const appwinBounds = this.appwindow.getBounds();
-            const tabsViewWidth = appwinBounds.width / 4;
-
-            this.webpage.setBounds({
-                x: tabsViewWidth,
-                y: 0,
-                width: appwinBounds.width - tabsViewWidth,
-                height: appwinBounds.height,
-            });
-
-            this.updateCurrentTab();
-        }
 
         // open the tab
         this.openUrl();
@@ -343,7 +330,7 @@ export class Glide {
             });
     }
 
-    private openTabsView() {
+    public openTabsView() {
         const appwinBounds = this.appwindow.getBounds();
         this.tabChooserView = new BrowserView({
             webPreferences: {
@@ -385,7 +372,7 @@ export class Glide {
         });
     }
 
-    private closeTabsView() {
+    public closeTabsView() {
         if (!this.tabChooserView) return;
 
         this.appwindow.removeBrowserView(this.tabChooserView);

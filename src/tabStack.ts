@@ -37,39 +37,21 @@ export class TabStack {
 
         this.state.tabs.push(tab);
 
+        this.switch(tab.id);
 
-        const appwinBounds = this.glide.appwindow.getBounds();
-        this.state.currentTab.webpage.setBounds({
-            x: 0,
-            y: 0,
-            width: appwinBounds.width,
-            height: appwinBounds.height,
+        this.glide.webpage.webContents.on('did-navigate', (_event, url) => {
+            if (url.startsWith('file://' + path.join(__dirname, 'glide-pages')))
+                return;
+
+            this.glide.url = url;
+            this.state.currentTab.url = url;
         });
-        this.state.currentTab.webpage.setAutoResize({
-            width: true,
-            height: true,
-            horizontal: true,
-            vertical: true
-        });
-        this.state.currentTab.webpage.webContents
-            .on('did-navigate', (_event, url) => {
-                this.glide.updateCurrentTab();
 
-                if (url.startsWith('file://' + path.join(__dirname, 'glide-pages')))
-                    return;
-
-                this.glide.url = url;
-                this.state.currentTab.url = url;
-            });
-
-        this.state.currentTab.webpage.webContents.on('did-finish-load', () => {
-            this.glide.currentPageTitle = this.state.currentTab.webpage.
-                webContents.getTitle();
+        this.glide.webpage.webContents.on('did-finish-load', () => {
+            this.glide.currentPageTitle =
+                this.glide.webpage.webContents.getTitle();
             this.glide.updateCurrentTab();
         });
-
-
-        this.switch(tab.id);
     }
 
     public close(tabId: number) {
@@ -119,8 +101,24 @@ export class TabStack {
         this.glide.webpage = this.state.currentTab.webpage;
         this.glide.url = this.state.currentTab.url;
 
+        const appwinBounds = this.glide.appwindow.getBounds();
+        this.state.currentTab.webpage.setBounds({
+            x: 0,
+            y: 0,
+            width: appwinBounds.width,
+            height: appwinBounds.height,
+        });
+        this.state.currentTab.webpage.setAutoResize({
+            width: true,
+            height: true,
+            horizontal: true,
+            vertical: true
+        });
+
         // add the new one
-        this.glide.appwindow.addBrowserView(this.state.currentTab.webpage);
+        this.glide.appwindow.addBrowserView(this.glide.webpage);
+
+        this.glide.closeTabsView();
     }
 
     // this is like close but we silently close without switching tabs

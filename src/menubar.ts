@@ -45,9 +45,7 @@ export function getMenubar(glide: Glide): Menu {
                     accelerator:
                         isMac ? 'Cmd+Option+I' : 'Alt+Shift+I',
                     click: () => {
-                        glide.webpage.webContents.openDevTools({
-                            mode: 'undocked'
-                        });
+                        glide.webpage.webContents.toggleDevTools();
                     }
                 },
                 { type: 'separator' },
