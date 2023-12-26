@@ -1,4 +1,4 @@
-import { BrowserWindow, BrowserView, ipcMain, Menu, HandlerDetails, desktopCapturer } from 'electron';
+import { BrowserWindow, BrowserView, ipcMain, Menu, HandlerDetails } from 'electron';
 import fs from 'fs';
 import * as path from 'path';
 import { formatUrl, isDomain, isUrl } from './utils';
@@ -14,8 +14,9 @@ export class Glide {
     public glideView: BrowserView; // containing our index.html defined in dist
     public tabStack: TabStack;
     public settings: any;
+    public currentPageTitle: string = '';
 
-    private tabChooserWindow: BrowserWindow | null = null;
+    private tabChooserView: BrowserView | null = null;
 
     constructor(settings: any) {
         this.settings = settings;
@@ -33,24 +34,6 @@ export class Glide {
         Menu.setApplicationMenu(menubar);
 
         const appwinBounds = this.appwindow.getBounds();
-
-        this.webpage = new BrowserView(webpageOpts);
-
-        this.webpage.setBounds({
-            x: 0,
-            y: 0,
-            width: appwinBounds.width,
-            height: appwinBounds.height,
-        });
-
-        this.webpage.setAutoResize({
-            width: true,
-            height: true,
-            horizontal: true,
-            vertical: true
-        });
-
-        this.appwindow.setBrowserView(this.webpage);
 
         this.glideView = new BrowserView({
             webPreferences: {
@@ -75,14 +58,6 @@ export class Glide {
 
         this.glideView.webContents.loadFile(path.join(__dirname, 'index.html'));
 
-        this.webpage.webContents.on('did-navigate', (_event, url) => {
-            if (url.startsWith('file://' + path.join(__dirname, 'glide-pages')))
-                return;
-
-            this.url = url;
-            this.tabStack.state.currentTab.url = url;
-        });
-
         // settings change
         ipcMain.on('change-settings', (_event, { setting, value }) => {
             this.settings[setting] = value;
@@ -99,9 +74,11 @@ export class Glide {
             {
                 'settings.theme.bg': this.settings['theme.bg'],
                 'settings.theme.fg': this.settings['theme.fg'],
+                'settings.theme.alt': this.settings['theme.alt'],
             }
         );
 
+        this.webpage = new BrowserView(webpageOpts);
         // tabs
         const currentTab: Tab = {
             url: this.url,
@@ -160,12 +137,14 @@ export class Glide {
 
         ipcMain.on('open-tab', (_event, id) => {
             this.tabStack.switch(id);
-            this.tabChooserWindow?.destroy();
+
+            this.closeTabsView();
         });
 
         ipcMain.on('close-tabs-win', () => {
-            this.tabChooserWindow?.destroy();
+            this.closeTabsView();
         })
+
         // dont open extra windows for links
         // one window is already too much for me to handle :>
         this.webpage.webContents.setWindowOpenHandler((details: HandlerDetails) => {
@@ -226,17 +205,6 @@ export class Glide {
         }
 
         this.webpage.webContents.loadURL(this.url);
-
-        this.webpage.webContents.once('did-finish-load', () => {
-            const currentTabId = this.tabStack.state.currentTab.id;
-            if (!currentTabId) return; // shouldn't happen
-
-            this.tabStack.update(currentTabId, {
-                url: this.url,
-                title: this.webpage.webContents.getTitle(),
-                webpage: new BrowserView(webpageOpts),
-            });
-        });
     }
 
     public openDefaultUrl() {
@@ -280,17 +248,6 @@ export class Glide {
 
         const filename = path.join('glide-pages', this.url.replace('glide://', '') + '.html');
         this.webpage.webContents.loadFile(path.join(__dirname, filename));
-
-        this.webpage.webContents.once('did-finish-load', () => {
-            const currentTabId = this.tabStack.state.currentTab.id;
-            if (!currentTabId) return; // shouldn't happen
-
-            this.tabStack.update(currentTabId, {
-                url: this.url,
-                title: this.webpage.webContents.getTitle(), // no need to change
-                webpage: this.webpage // no need to change 
-            });
-        });
     }
 
     public addNewTab() {
@@ -299,6 +256,23 @@ export class Glide {
             title: 'New tab',
             webpage: new BrowserView(webpageOpts),
         });
+
+        if (this.tabChooserView) {
+            const appwinBounds = this.appwindow.getBounds();
+            const tabsViewWidth = appwinBounds.width / 4;
+
+            this.webpage.setBounds({
+                x: tabsViewWidth,
+                y: 0,
+                width: appwinBounds.width - tabsViewWidth,
+                height: appwinBounds.height,
+            });
+
+            this.updateCurrentTab();
+        }
+
+        // open the tab
+        this.openUrl();
 
         this.showUrlbar(); // open the url bar at new tab
     }
@@ -345,29 +319,90 @@ export class Glide {
         this.tabStack.switch(newTabId);
     }
 
-    public openTabsWindow() {
-        this.tabChooserWindow = new BrowserWindow({
-            width: 300,
-            height: 400,
-            resizable: false,
+    public toggleTabsView() {
+        if (this.tabChooserView) {
+            this.closeTabsView();
+            return;
+        }
+
+        this.openTabsView();
+    }
+
+    public updateCurrentTab() {
+        if (!this.tabStack.state.currentTab.id) return;
+
+        this.tabStack.update(this.tabStack.state.currentTab.id, {
+            url: this.url,
+            title: this.currentPageTitle,
+            webpage: this.webpage,
+        });
+
+        if (this.tabChooserView)
+            this.tabChooserView.webContents.send('get-tabs', {
+                tabState: JSON.stringify(this.tabStack.state)
+            });
+    }
+
+    private openTabsView() {
+        const appwinBounds = this.appwindow.getBounds();
+        this.tabChooserView = new BrowserView({
             webPreferences: {
                 nodeIntegration: true,
-                contextIsolation: false,
+                contextIsolation: false
             },
-            titleBarStyle: 'customButtonsOnHover',
-            autoHideMenuBar: true,
         });
-        this.tabChooserWindow.loadFile(path.join(__dirname, 'tabs.html'));
-
-        this.tabChooserWindow.on('blur', () => {
-            this.tabChooserWindow?.destroy();
+        const tabsViewWidth = appwinBounds.width / 4;
+        this.tabChooserView.setBounds({
+            x: 0,
+            y: 0,
+            width: tabsViewWidth,
+            height: appwinBounds.height,
         });
 
-        this.tabChooserWindow.webContents.once('did-finish-load', () => {
-            this.tabChooserWindow?.webContents.send(
+        this.tabChooserView.setAutoResize({
+            width: true,
+            height: true,
+            horizontal: true,
+            vertical: true
+        });
+
+        this.webpage.setBounds({
+            x: tabsViewWidth,
+            y: 0,
+            width: appwinBounds.width - tabsViewWidth,
+            height: appwinBounds.height,
+        });
+
+        this.appwindow.addBrowserView(this.tabChooserView);
+
+        this.tabChooserView.webContents.loadFile(path.join(__dirname, 'tabs.html'));
+
+        this.tabChooserView.webContents.on('did-finish-load', () => {
+            this.tabChooserView?.webContents.send(
                 'get-tabs',
-                { tabs: JSON.stringify(this.tabStack.state.tabs) },
+                { tabState: JSON.stringify(this.tabStack.state) },
             );
+        });
+    }
+
+    private closeTabsView() {
+        if (!this.tabChooserView) return;
+
+        this.appwindow.removeBrowserView(this.tabChooserView);
+        this.tabChooserView = null;
+
+        const appwinBounds = this.appwindow.getBounds();
+        this.webpage.setBounds({
+            x: 0,
+            y: 0,
+            width: appwinBounds.width,
+            height: appwinBounds.height,
+        });
+        this.webpage.setAutoResize({
+            width: true,
+            height: true,
+            horizontal: true,
+            vertical: true
         });
     }
 }

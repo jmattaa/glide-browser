@@ -32,6 +32,7 @@ input {
 
 input[type="checkbox"] {
     width: auto;
+    accent-color: rgb(var(--glide-fg));
 }
 
 input:focus {

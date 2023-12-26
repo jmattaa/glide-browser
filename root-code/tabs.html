@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tab Chooser</title>
+    <link rel="stylesheet" href="./glide-pages/css/style.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,13 +20,13 @@
         li {
             margin-bottom: 10px;
             cursor: pointer;
-            border: 1px solid #ccc;
+            border: 1px solid rgb(var(--glide-fg));
             padding: 10px;
             border-radius: 5px;
         }
 
-        li:hover {
-            background-color: #f0f0f0;
+        .selected-tab {
+            background: rgb(var(--glide-alt));
         }
     </style>
 </head>
@@ -37,8 +38,11 @@
 
         const tabList = document.getElementById('tabList');
 
-        ipcRenderer.on('get-tabs', (event, data) => {
-            tabs = JSON.parse(data.tabs);
+        ipcRenderer.on('get-tabs', (event, stringData) => {
+            tabList.innerHTML = '';
+            const tabState = JSON.parse(stringData.tabState);
+            const tabs = tabState.tabs;
+
             tabs.forEach(tab => {
                 const li = document.createElement('li');
                 li.textContent = `${tab.title}`;
@@ -46,6 +50,8 @@
                     ipcRenderer.send('open-tab', tab.id);
                     window.close();
                 });
+                if (tabState.currentTab.id === tab.id)
+                    li.className = 'selected-tab';
                 tabList.appendChild(li);
             });
         });

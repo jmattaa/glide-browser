@@ -6,6 +6,7 @@
 :root {
     --glide-bg: #{settings.theme.bg};
     --glide-fg: #{settings.theme.fg};
+    --glide-alt: #{settings.theme.alt};
 }
 
 * {

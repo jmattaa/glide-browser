@@ -90,7 +90,7 @@ export function getMenubar(glide: Glide): Menu {
                 {
                     label: 'Show All Tabs',
                     accelerator: CmdOrCtrl('Shift+L'),
-                    click: () => { glide.openTabsWindow() }
+                    click: () => { glide.toggleTabsView() }
                 }
             ]
         },
