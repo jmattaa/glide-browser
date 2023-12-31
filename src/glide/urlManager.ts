@@ -67,15 +67,16 @@ export class UrlManager {
 
     public openGlideUrl(url = this.url) {
         this.url = url;
-        if (!this.url.startsWith('glide://')) {
-            this.openDefaultUrl();
-            return;
-        }
+        let filename;
 
-        const filename =
-            path.join('glide-pages', this.url.replace('glide://', '') + '.html');
+        if (!this.url.startsWith('glide://'))
+            filename = this.url;
+        else
+            filename =
+                path.join('glide-pages', this.url.replace('glide://', '') + '.html');
+
         this.glide.windowManager.webpage.webContents.
-            loadFile(path.join(__dirname, '..', filename));
+            loadURL('file://' + path.join(__dirname, '..', filename));
     }
 
     public showUrlbar() {

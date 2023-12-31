@@ -1,4 +1,4 @@
-import { BrowserWindow, BrowserView, Menu } from 'electron';
+import { BrowserWindow, BrowserView, Menu, ipcRenderer, ipcMain } from 'electron';
 import * as path from 'path';
 import { getMenubar } from '../menubar';
 import { webpageOpts } from '../globals';
@@ -51,6 +51,10 @@ export class WindowManager {
         this.glideView.webContents.loadFile(path.join(__dirname, '..', 'index.html'));
 
         this.webpage = new BrowserView(webpageOpts);
+
+        ipcMain.on('reload-err-page', (_e, { url }) => {
+            this.glide.urlManager.openUrl(url);
+        });
     }
 
     public goBack() {
@@ -65,6 +69,5 @@ export class WindowManager {
 
     public fitScreen() {
         this.appwindow.maximize();
-        console.log(this.appwindow.getBrowserViews());
     }
 }

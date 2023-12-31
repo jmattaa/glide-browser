@@ -51,6 +51,26 @@ export class TabStack {
                 this.glide.windowManager.webpage.webContents.getTitle();
             this.glide.tabManager.updateCurrentTab();
         });
+
+        this.glide.windowManager.webpage.webContents.on('did-fail-load', (
+            e,
+            _errorCode,
+            errorDesc,
+            validatedUrl
+        ) => {
+            e.preventDefault();
+            const urlToOpen =
+                path.join(
+                    'glide-pages',
+                    'error',
+                    'index.html'
+                ) +
+                '?ed=' + errorDesc +
+                '&url=' + validatedUrl;
+
+            this.glide.urlManager.openGlideUrl(urlToOpen);
+            this.glide.urlManager.url = validatedUrl;
+        });
     }
 
     public close(tabId: number) {
