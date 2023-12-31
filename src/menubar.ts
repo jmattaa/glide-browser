@@ -1,7 +1,6 @@
 import { Menu, MenuItem, MenuItemConstructorOptions, app } from "electron"
-import { Glide } from "./glide"
+import { Glide } from "./glide/glide"
 import { CmdOrCtrl, isMac } from "./utils"
-
 
 export function getMenubar(glide: Glide): Menu {
     const menuTempalate: (MenuItemConstructorOptions | MenuItem)[] = [
@@ -13,13 +12,13 @@ export function getMenubar(glide: Glide): Menu {
                 {
                     label: 'Fit screen',
                     accelerator: CmdOrCtrl('Shift+F'),
-                    click: () => { glide.fitScreen() },
+                    click: () => { glide.windowManager.fitScreen() },
                 },
                 {
                     label: 'Open Settings',
                     accelerator: CmdOrCtrl(','),
                     click: () => {
-                        glide.openGlideUrl('glide://settings');
+                        glide.urlManager.openGlideUrl('glide://settings');
                     }
                 },
                 { type: 'separator' },
@@ -45,7 +44,7 @@ export function getMenubar(glide: Glide): Menu {
                     accelerator:
                         isMac ? 'Cmd+Option+I' : 'Alt+Shift+I',
                     click: () => {
-                        glide.webpage.webContents.toggleDevTools();
+                        glide.windowManager.webpage.webContents.toggleDevTools();
                     }
                 },
                 { type: 'separator' },
@@ -62,33 +61,33 @@ export function getMenubar(glide: Glide): Menu {
                 {
                     label: 'Show Url',
                     accelerator: CmdOrCtrl('L'),
-                    click: () => { glide.showUrlbar() }
+                    click: () => { glide.urlManager.showUrlbar() }
                 },
                 { type: 'separator' },
                 {
                     label: 'New Tab',
                     accelerator: CmdOrCtrl('T'),
-                    click: () => { glide.addNewTab() }
+                    click: () => { glide.tabManager.addNewTab() }
                 },
                 {
                     label: 'Close Current Tab',
                     accelerator: CmdOrCtrl('W'),
-                    click: () => { glide.closeCurrentTab() }
+                    click: () => { glide.tabManager.closeCurrentTab() }
                 },
                 {
                     label: 'Next Tab',
                     accelerator: 'Ctrl+Tab',
-                    click: () => { glide.NextTab() }
+                    click: () => { glide.tabManager.nextTab() }
                 },
                 {
                     label: 'Previous Tab',
                     accelerator: 'Ctrl+Shift+Tab',
-                    click: () => { glide.prevTab() }
+                    click: () => { glide.tabManager.prevTab() }
                 },
                 {
                     label: 'Show All Tabs',
                     accelerator: CmdOrCtrl('Shift+L'),
-                    click: () => { glide.toggleTabsView() }
+                    click: () => { glide.tabManager.toggleTabsView() }
                 }
             ]
         },
@@ -98,18 +97,18 @@ export function getMenubar(glide: Glide): Menu {
                 {
                     label: 'Show Url',
                     accelerator: CmdOrCtrl('L'),
-                    click: () => { glide.showUrlbar() }
+                    click: () => { glide.urlManager.showUrlbar() }
                 },
                 { type: 'separator' },
                 {
                     label: 'Go Back',
                     accelerator: CmdOrCtrl('['),
-                    click: () => { glide.goBack() },
+                    click: () => { glide.windowManager.goBack() },
                 },
                 {
                     label: 'Go Forward',
                     accelerator: CmdOrCtrl(']'),
-                    click: () => { glide.goForward() },
+                    click: () => { glide.windowManager.goForward() },
                 },
             ],
         },

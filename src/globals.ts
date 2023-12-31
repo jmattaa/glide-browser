@@ -8,3 +8,4 @@ export const webpageOpts: BrowserViewConstructorOptions = {
         nodeIntegration: false,
     },
 }
+

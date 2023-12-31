@@ -1,5 +1,5 @@
 import { BrowserView } from "electron";
-import { Glide } from "./glide";
+import { Glide } from "../glide";
 import { tabActivity } from "./tabActivity";
 import * as path from 'path';
 
@@ -25,7 +25,6 @@ export class TabStack {
             tabs: [],
             currentTab: tab,
         }
-        this.add(tab);
 
         // initialize tab activity monitor
         tabActivity.monitor(this);
@@ -39,18 +38,18 @@ export class TabStack {
 
         this.switch(tab.id);
 
-        this.glide.webpage.webContents.on('did-navigate', (_event, url) => {
-            if (url.startsWith('file://' + path.join(__dirname, 'glide-pages')))
+        this.glide.windowManager.webpage.webContents.on('did-navigate', (_event, url) => {
+            if (url.startsWith('file://' + path.join(__dirname, '..', 'glide-pages')))
                 return;
 
-            this.glide.url = url;
+            this.glide.urlManager.url = url;
             this.state.currentTab.url = url;
         });
 
-        this.glide.webpage.webContents.on('did-finish-load', () => {
+        this.glide.windowManager.webpage.webContents.on('did-finish-load', () => {
             this.glide.currentPageTitle =
-                this.glide.webpage.webContents.getTitle();
-            this.glide.updateCurrentTab();
+                this.glide.windowManager.webpage.webContents.getTitle();
+            this.glide.tabManager.updateCurrentTab();
         });
     }
 
@@ -92,19 +91,19 @@ export class TabStack {
             throw new ReferenceError(`Tab with id: ${tabId} can't be selected`);
 
         // remove old browserView
-        this.glide.appwindow.removeBrowserView(this.state.currentTab.webpage);
+        this.glide.windowManager.appwindow.removeBrowserView(this.state.currentTab.webpage);
 
-        this.glide.closeTabsView();
+        this.glide.tabManager.closeTabsView();
 
         // last active is now before we switch
         this.state.currentTab.lastActivity = Date.now();
 
         this.state.currentTab = this.state.tabs[tabIdx];
 
-        this.glide.webpage = this.state.currentTab.webpage;
-        this.glide.url = this.state.currentTab.url;
+        this.glide.windowManager.webpage = this.state.currentTab.webpage;
+        this.glide.urlManager.url = this.state.currentTab.url;
 
-        const appwinBounds = this.glide.appwindow.getBounds();
+        const appwinBounds = this.glide.windowManager.appwindow.getBounds();
         this.state.currentTab.webpage.setBounds({
             x: 0,
             y: 0,
@@ -119,7 +118,8 @@ export class TabStack {
         });
 
         // add the new one
-        this.glide.appwindow.addBrowserView(this.glide.webpage);
+        this.glide.windowManager.appwindow.
+            addBrowserView(this.glide.windowManager.webpage);
     }
 
     // this is like close but we silently close without switching tabs

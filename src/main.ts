@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
-import { Glide } from './glide';
+import { Glide } from './glide/glide';
 import fs from 'fs';
-import { settingsPath } from './globals';
+import {  settingsPath } from './globals';
 
 let glide: Glide;
 
@@ -11,7 +11,7 @@ function createWindow() {
             throw Error(err + '\r\nGLIDE NOT INSTALLED CORRECTLY!');
 
         glide = new Glide(JSON.parse(res.toString()));
-        glide.openUrl();
+        glide.urlManager.openUrl();
     });
 }
 
