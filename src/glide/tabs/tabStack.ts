@@ -33,13 +33,16 @@ export class TabStack {
     public add(tab: Tab) {
         tab.id = Date.now() + Math.random();
         tab.lastActivity = Date.now();
-
         this.state.tabs.push(tab);
-
         this.switch(tab.id);
 
         this.glide.windowManager.webpage.webContents.on('did-navigate', (_event, url) => {
-            if (url.startsWith('file://' + path.join(__dirname, '..', 'glide-pages')))
+            if (url.startsWith('file://' + path.join(
+                __dirname,
+                '..',
+                '..',
+                'glide-pages'
+            )))
                 return;
 
             this.glide.urlManager.url = url;
@@ -47,6 +50,18 @@ export class TabStack {
         });
 
         this.glide.windowManager.webpage.webContents.on('did-finish-load', () => {
+            if (
+                this.glide.urlManager.url.
+                    startsWith(
+                        'file://' + path.join(
+                            __dirname,
+                            '..',
+                            '..',
+                            'glide-pages'
+                        )
+                    )
+            ) return;
+
             this.glide.currentPageTitle =
                 this.glide.windowManager.webpage.webContents.getTitle();
             this.glide.tabManager.updateCurrentTab();

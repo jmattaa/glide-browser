@@ -1,4 +1,4 @@
-import { BrowserWindow, BrowserView, Menu, ipcRenderer, ipcMain } from 'electron';
+import { BrowserWindow, BrowserView, Menu, ipcMain } from 'electron';
 import * as path from 'path';
 import { getMenubar } from '../menubar';
 import { webpageOpts } from '../globals';
