@@ -18,7 +18,7 @@ require('./package.js')('darwin', platform).then(function(packagePaths) {
         fs.mkdirSync(binDir);
     }
 
-    let output = fs.createWriteStream(binDir + '/glide-v' + version + platform + '.zip');
+    let output = fs.createWriteStream(binDir + '/glide-v' + version + '-' + platform + '.zip');
     let archive = archiver('zip', {
         zlib: { level: 9 }
     });
