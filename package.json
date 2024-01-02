@@ -1,6 +1,5 @@
 {
-    "name": "glide-browser",
-    "productName": "Glide",
+    "name": "Glide",
     "version": "1.0.0",
     "description": "",
     "main": "dist/main.js",
@@ -22,7 +21,7 @@
     },
     "keywords": [],
     "author": "Jonathan Matta",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
         "archiver": "^6.0.1",
         "electron": "^28.0.0",
