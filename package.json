@@ -7,6 +7,9 @@
         "mac": {
             "icon": "assets/icons/icon.icns"
         },
+        "win": {
+            "icon": "assets/icons/icon.ico"
+        },
         "linux": {
             "icon": "assets/icons/icon.png"
         }
@@ -16,7 +19,8 @@
         "dev": "tsc && electron .",
         "devbuild": "npm run build && electron .",
         "buildMacIntel": "npm run build && node ./scripts/buildMac.js --platform=x64",
-        "buildMacArm": "npm run build && node ./scripts/buildMac.js --platform=arm64"
+        "buildMacArm": "npm run build && node ./scripts/buildMac.js --platform=arm64",
+        "buildSnap": "npm run build && node ./scripts/buildSnap.js"
     },
     "keywords": [],
     "author": "Jonathan Matta",
