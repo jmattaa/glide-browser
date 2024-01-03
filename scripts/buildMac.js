@@ -13,12 +13,14 @@ require('./package.js')('darwin', platform).then(function(packagePaths) {
         execSync('codesign -s - -a arm64 -f --deep ' + packagePath + '/glide.app');
     }
 
-    const binDir = path.join(process.cwd(), 'releases', 'bin', 'mac');
+    const binDir = path.join(process.cwd(), 'releases', 'bin');
     if (!fs.existsSync(binDir)) {
         fs.mkdirSync(binDir);
     }
 
-    let output = fs.createWriteStream(binDir + '/glide-v' + version + '-' + platform + '.zip');
+    let output = fs.createWriteStream(
+        binDir + '/glide-v' + version + '-mac-' + platform + '.zip'
+    );
     let archive = archiver('zip', {
         zlib: { level: 9 }
     });

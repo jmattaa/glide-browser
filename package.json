@@ -20,7 +20,8 @@
         "devbuild": "npm run build && electron .",
         "buildMacIntel": "npm run build && node ./scripts/buildMac.js --platform=x64",
         "buildMacArm": "npm run build && node ./scripts/buildMac.js --platform=arm64",
-        "buildSnap": "npm run build && node ./scripts/buildSnap.js"
+        "buildSnap": "npm run build && node ./scripts/buildSnap.js --platform=x64",
+        "buildSnapArm": "npm run build && node ./scripts/buildSnap.js --platform=arm64"
     },
     "keywords": [],
     "author": "Jonathan Matta",

@@ -2,7 +2,23 @@ const builder = require('electron-builder');
 const Platform = builder.Platform;
 const Arch = builder.Arch;
 
-require('./package.js')('linux', 'x64').then(function(paths) {
+const packageFile = require('./../package.json');
+const version = packageFile.version;
+
+const platform = process.argv.find(arg => arg.match('platform')).split('=')[1];
+
+function toArch (platform) {
+  switch (platform) {
+    case 'x64':
+      return Arch.x64
+    case 'arm64':
+      return Arch.arm64
+    default:
+      return Arch.universal
+  }
+}
+
+require('./package.js')('linux', platform).then(function(paths) {
     const options = {
         linux: {
             target: ['snap'],
@@ -14,11 +30,14 @@ require('./package.js')('linux', 'x64').then(function(paths) {
         directories: {
             output: 'releases/bin/snap'
         },
+        snap: {
+            artifactName: 'glide-v' + version + '-linux-' + platform + '.snap'
+        }
     };
 
     builder.build({
         prepackaged: paths[0],
-        targets: Platform.LINUX.createTarget(['snap'], Arch.x64),
+        targets: Platform.LINUX.createTarget(['snap'], toArch(platform)),
         config: options
     });
 });
