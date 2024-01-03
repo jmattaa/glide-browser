@@ -5,6 +5,7 @@ import { UrlManager } from './urlManager';
 import { Tab } from './tabs/tabStack';
 import * as path from 'path';
 import { genFromTemplateFile } from '../templateGen';
+import { ipcMain } from 'electron';
 
 export class Glide {
     public settingsManager: SettingsManager;
@@ -28,14 +29,14 @@ export class Glide {
         this.tabManager = new TabManager(this, currentTab);
         this.tabManager.tabStack.add(currentTab);
 
-        genFromTemplateFile(
-            path.join(__dirname, '..', 'templates', 'css', 'style.css.template'),
-            path.join(__dirname, '..', 'glide-pages', 'css', 'style.css'),
-            {
-                'settings.theme.bg': this.settingsManager.settings['theme.bg'],
-                'settings.theme.fg': this.settingsManager.settings['theme.fg'],
-                'settings.theme.alt': this.settingsManager.settings['theme.alt'],
-            }
-        );
+        ipcMain.on('request-theme', (event) => {
+            event.reply('request-theme-response',
+                {
+                    'theme.bg': this.settingsManager.settings['theme.bg'],
+                    'theme.fg': this.settingsManager.settings['theme.fg'],
+                    'theme.alt': this.settingsManager.settings['theme.alt'],
+                }
+            );
+        });
     }
 }
