@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tab Chooser</title>
     <link rel="stylesheet" href="./glide-pages/css/style.css">
+
     <style>
         body {
             padding: 20px;
@@ -40,6 +41,8 @@
     <script>
         const {ipcRenderer} = require('electron');
 
+        window.ipcRenderer = ipcRenderer;
+
         const tabList = document.getElementById('tabList');
 
         ipcRenderer.on('get-tabs', (event, rawData) => {
@@ -69,6 +72,7 @@
         })
 
     </script>
+    <script src="./mainClient.js" defer></script>
 </body>
 
 </html>

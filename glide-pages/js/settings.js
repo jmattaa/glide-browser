@@ -1,11 +1,12 @@
-import data from "../../user/settings.json" assert { type: "json" };
-
 const formElement = document.getElementById("settingsForm");
 const settingsBanner = document.querySelector(".banner");
 
-const settings = data;
-
-createSettingsForm(settings);
+window.onload = function() {
+    window.glideApi.send('request-settings', {});
+    window.glideApi.on('request-settings-response', function(_evt, data) {
+        createSettingsForm(data.settings);
+    });
+}
 
 function createInput(key, value) {
     const container = document.createElement("div");
@@ -44,13 +45,7 @@ function createSettingsForm(settings) {
 }
 
 function changeSetting(setting, value) {
-    window.postMessage({
-        name: 'glide-ipc-change-settings',
-        data: {
-            setting,
-            value
-        },
-    });
+    window.glideApi.send('change-settings', { setting, value });
 
     // show banner
     settingsBanner.style.display = 'block';

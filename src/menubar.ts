@@ -42,7 +42,7 @@ export function getMenubar(glide: Glide): Menu {
                 {
                     label: 'Toggle Dev Tools',
                     accelerator:
-                        isMac ? 'Cmd+Option+I' : 'Alt+Shift+I',
+                        isMac ? 'Cmd+Option+I' : 'Control+Shift+I',
                     click: () => {
                         glide.windowManager.webpage.webContents.toggleDevTools();
                     }

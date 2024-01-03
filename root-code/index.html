@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glide</title>
     <link rel="stylesheet" href="./glide-pages/css/style.css">
+
     <style>
         * {
             margin: 0;
@@ -53,6 +54,7 @@
         const searchInput = document.getElementById('search-bar');
 
         const {ipcRenderer} = window.require('electron');
+        window.ipcRenderer = ipcRenderer;
 
         ipcRenderer.on('searchbar-open', (_e, {url}) => {
             searchContainer.style.opacity = 1;
@@ -77,6 +79,7 @@
             }
         });
     </script>
+    <script src="./mainClient.js" defer></script>
 </body>
 
 </html>
