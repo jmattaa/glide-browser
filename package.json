@@ -1,7 +1,7 @@
 {
     "name": "Glide",
     "version": "0.1.0",
-    "description": "",
+    "description": "the minimal browser",
     "main": "dist/main.js",
     "build": {
         "mac": {
@@ -31,6 +31,7 @@
         "archiver": "^6.0.1",
         "electron": "^28.0.0",
         "electron-builder": "^24.9.1",
+        "electron-installer-windows": "^3.0.0",
         "electron-packager": "^17.1.2",
         "typescript": "^5.3.3"
     }

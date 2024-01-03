@@ -8,7 +8,8 @@ const version = packageFile.version;
 
 const createPackage = require('./package.js');
 
-async function afterPackageBuilt(packagePath) {
+async function afterPackageBuilt(packagePaths) {
+    const packagePath = packagePaths[0];
     if (!fs.existsSync('releases/bin')) {
         fs.mkdirSync('releases/bin');
     }
@@ -31,14 +32,13 @@ async function afterPackageBuilt(packagePath) {
             src: packagePath,
             dest: 'releases/bin/glide-installer-win-x64',
             icon: 'assets/icons/icon.ico',
-            animation: 'icons/windows-installer.gif',
-            licenseUrl: 'https://github.com/minbrowser/min/blob/master/LICENSE.txt',
+            licenseUrl: 'https://github.com/jmattaa/glide-brwoser/blob/main/LICENSE',
             noMsi: true
         };
 
         console.log('Creating package (this may take a while)');
 
-        fs.copyFileSync('LICENSE.txt', packagePath + '/LICENSE');
+        fs.copyFileSync('LICENSE', packagePath + '/LICENSE');
 
         await installer(options)
             .then(function() {
