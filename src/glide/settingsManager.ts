@@ -16,5 +16,11 @@ export class SettingsManager {
             let settingsJSON = JSON.stringify(this.settings);
             fs.writeFileSync(settingsPath, settingsJSON);
         });
+
+        ipcMain.on('request-settings', (event) => {
+            event.reply('request-settings-response', {
+                settings: this.settings
+            });
+        });
     }
 }
