@@ -22,7 +22,7 @@
         "buildMacArm": "npm run build && node ./scripts/buildMac.js --platform=arm64",
         "buildSnap": "npm run build && node ./scripts/buildSnap.js --platform=x64",
         "buildSnapArm": "npm run build && node ./scripts/buildSnap.js --platform=arm64",
-        "buildWindows": "npm run build && node ./scripts/buildWindows.js",
+        "buildWindows": "npm run build && node ./scripts/buildWindows.js"
     },
     "keywords": [],
     "author": "Jonathan Matta",
