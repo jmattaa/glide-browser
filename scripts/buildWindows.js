@@ -41,12 +41,6 @@ async function afterPackageBuilt(packagePaths) {
         fs.copyFileSync('LICENSE', packagePath + '/LICENSE');
 
         await installer(options)
-            .then(function() {
-                fs.renameSync(
-                    './releases/bin/glide-installer-win-x64/glide-' + version + '-setup.exe', 
-                    './dist/glide/glide-' + version + '-setup.exe'
-                );
-            })
             .catch(err => {
                 console.error(err, err.stack);
                 process.exit(1);
