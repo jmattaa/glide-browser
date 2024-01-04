@@ -1,7 +1,19 @@
 import { app, BrowserWindow } from 'electron';
 import { Glide } from './glide/glide';
 import fs from 'fs';
-import {  settingsPath } from './globals';
+import { configDir, settingsPath } from './globals';
+import * as path from 'path';
+
+// create settingsPath if not existing
+if (!fs.existsSync(settingsPath)) {
+    fs.mkdir(configDir, function() {
+        fs.cpSync(
+            path.join(__dirname, '..', 'user'),
+            configDir,
+            { recursive: true }
+        )
+    });
+}
 
 let glide: Glide;
 

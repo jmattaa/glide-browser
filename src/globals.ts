@@ -6,7 +6,7 @@ import os from 'os';
 const glideHomeDir = os.userInfo().homedir;
 
 // also defined in scripts/setupDist.js
-const configDir = fs.existsSync(path.join(glideHomeDir, '.config')) ?
+export const configDir = fs.existsSync(path.join(glideHomeDir, '.config')) ?
     path.join(glideHomeDir, '.config', 'glidebrowser') :
     path.join(glideHomeDir, '.glidebrowser-config');
 

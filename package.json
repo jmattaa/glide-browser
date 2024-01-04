@@ -1,6 +1,6 @@
 {
     "name": "Glide",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "the minimal browser",
     "main": "dist/main.js",
     "build": {
