@@ -1,8 +1,8 @@
 import { Menu, MenuItem, MenuItemConstructorOptions, app } from "electron"
-import { Glide } from "./glide/glide"
+import { Quiver } from "./quiver/quiver"
 import { CmdOrCtrl, isMac } from "./utils"
 
-export function getMenubar(glide: Glide): Menu {
+export function getMenubar(quiver: Quiver): Menu {
     const menuTempalate: (MenuItemConstructorOptions | MenuItem)[] = [
         {
             label: app.name,
@@ -12,13 +12,13 @@ export function getMenubar(glide: Glide): Menu {
                 {
                     label: 'Fit screen',
                     accelerator: CmdOrCtrl('Shift+F'),
-                    click: () => { glide.windowManager.fitScreen() },
+                    click: () => { quiver.windowManager.fitScreen() },
                 },
                 {
                     label: 'Open Settings',
                     accelerator: CmdOrCtrl(','),
                     click: () => {
-                        glide.urlManager.openGlideUrl('glide://settings');
+                        quiver.urlManager.openQuiverUrl('quiver://settings');
                     }
                 },
                 { type: 'separator' },
@@ -44,7 +44,7 @@ export function getMenubar(glide: Glide): Menu {
                     accelerator:
                         isMac ? 'Cmd+Option+I' : 'Control+Shift+I',
                     click: () => {
-                        glide.windowManager.webpage.webContents.toggleDevTools();
+                        quiver.windowManager.webpage.webContents.toggleDevTools();
                     }
                 },
                 { type: 'separator' },
@@ -61,33 +61,33 @@ export function getMenubar(glide: Glide): Menu {
                 {
                     label: 'Show Url',
                     accelerator: CmdOrCtrl('L'),
-                    click: () => { glide.urlManager.showUrlbar() }
+                    click: () => { quiver.urlManager.showUrlbar() }
                 },
                 { type: 'separator' },
                 {
                     label: 'New Tab',
                     accelerator: CmdOrCtrl('T'),
-                    click: () => { glide.tabManager.addNewTab() }
+                    click: () => { quiver.tabManager.addNewTab() }
                 },
                 {
                     label: 'Close Current Tab',
                     accelerator: CmdOrCtrl('W'),
-                    click: () => { glide.tabManager.closeCurrentTab() }
+                    click: () => { quiver.tabManager.closeCurrentTab() }
                 },
                 {
                     label: 'Next Tab',
                     accelerator: 'Ctrl+Tab',
-                    click: () => { glide.tabManager.nextTab() }
+                    click: () => { quiver.tabManager.nextTab() }
                 },
                 {
                     label: 'Previous Tab',
                     accelerator: 'Ctrl+Shift+Tab',
-                    click: () => { glide.tabManager.prevTab() }
+                    click: () => { quiver.tabManager.prevTab() }
                 },
                 {
                     label: 'Show All Tabs',
                     accelerator: CmdOrCtrl('Shift+L'),
-                    click: () => { glide.tabManager.toggleTabsView() }
+                    click: () => { quiver.tabManager.toggleTabsView() }
                 }
             ]
         },
@@ -97,18 +97,18 @@ export function getMenubar(glide: Glide): Menu {
                 {
                     label: 'Show Url',
                     accelerator: CmdOrCtrl('L'),
-                    click: () => { glide.urlManager.showUrlbar() }
+                    click: () => { quiver.urlManager.showUrlbar() }
                 },
                 { type: 'separator' },
                 {
                     label: 'Go Back',
                     accelerator: CmdOrCtrl('['),
-                    click: () => { glide.windowManager.goBack() },
+                    click: () => { quiver.windowManager.goBack() },
                 },
                 {
                     label: 'Go Forward',
                     accelerator: CmdOrCtrl(']'),
-                    click: () => { glide.windowManager.goForward() },
+                    click: () => { quiver.windowManager.goForward() },
                 },
             ],
         },

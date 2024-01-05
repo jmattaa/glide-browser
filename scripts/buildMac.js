@@ -10,7 +10,7 @@ const platform = process.argv.find(arg => arg.match('platform')).split('=')[1];
 require('./package.js')('darwin', platform).then(function(packagePaths) {
     const packagePath = packagePaths[0];
     if (platform === 'arm64') {
-        execSync('codesign -s - -a arm64 -f --deep ' + packagePath + '/glide.app');
+        execSync('codesign -s - -a arm64 -f --deep ' + packagePath + '/quiver.app');
     }
 
     const binDir = path.join(process.cwd(), 'releases', 'bin');
@@ -19,7 +19,7 @@ require('./package.js')('darwin', platform).then(function(packagePaths) {
     }
 
     let output = fs.createWriteStream(
-        binDir + '/glide-v' + version + '-mac-' + platform + '.zip'
+        binDir + '/quiver-v' + version + '-mac-' + platform + '.zip'
     );
     let archive = archiver('zip', {
         zlib: { level: 9 }
@@ -29,7 +29,7 @@ require('./package.js')('darwin', platform).then(function(packagePaths) {
         throw err;
     });
 
-    archive.directory(path.resolve(packagePath, 'glide.app'), 'glide.app')
+    archive.directory(path.resolve(packagePath, 'quiver.app'), 'quiver.app')
 
     archive.pipe(output);
     archive.finalize();

@@ -15,7 +15,7 @@ export function genFromTemplateFile(
 ) {
     fs.readFile(templatefile, (err, res) => {
         if (err)
-            throw Error(err + '\r\nGLIDE NOT INSTALLED CORRECTLY!');
+            throw Error(err + '\r\nQUIVER NOT INSTALLED CORRECTLY!');
 
         let newfilecode = parse(res.toString(), vars);
         fs.writeFileSync(destfile, newfilecode);

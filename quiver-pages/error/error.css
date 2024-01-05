@@ -25,7 +25,7 @@ body {
 button {
     height: 100%;
     padding: 1em;
-    background-color: rgb(var(--glide-alt));
+    background-color: rgb(var(--quiver-alt));
     border: none;
     border-radius: 10px;
     transition: all 255ms ease-in-out;

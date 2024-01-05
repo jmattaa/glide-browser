@@ -1,1 +1,1 @@
-# Contributing to Glide 🚀
+# Contributing to Quiver 🚀

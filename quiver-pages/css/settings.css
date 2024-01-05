@@ -26,18 +26,18 @@ input {
     margin-bottom: 15px;
     border: 1px solid #00000000;
     border-radius: 5px;
-    background-color: rgba(var(--glide-fg), .1);
+    background-color: rgba(var(--quiver-fg), .1);
     transition: border 255ms ease-in-out;
 }
 
 input[type="checkbox"] {
     width: auto;
-    accent-color: rgb(var(--glide-fg));
+    accent-color: rgb(var(--quiver-fg));
 }
 
 input:focus {
     outline: none;
-    border: 1px solid rgba(var(--glide-fg), .3);
+    border: 1px solid rgba(var(--quiver-fg), .3);
 }
 
 #settingsForm {
@@ -61,5 +61,5 @@ input:focus {
 
 .banner * {
     background-color: rgb(250, 103, 43);
-    color: rgb(var(--glide-bg));
+    color: rgb(var(--quiver-bg));
 }

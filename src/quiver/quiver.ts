@@ -7,7 +7,7 @@ import * as path from 'path';
 import { genFromTemplateFile } from '../templateGen';
 import { ipcMain } from 'electron';
 
-export class Glide {
+export class Quiver {
     public settingsManager: SettingsManager;
     public tabManager: TabManager;
     public windowManager: WindowManager;

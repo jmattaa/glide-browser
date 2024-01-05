@@ -15,13 +15,13 @@ async function afterPackageBuilt(packagePaths) {
     }
 
     var output = fs.createWriteStream(
-        'releases/bin/' + 'glide-v' + version + '-windows' +
+        'releases/bin/' + 'quiver-v' + version + '-windows' +
         (packagePath.includes('ia32') ? '-ia32' : '') + '.zip'
     );
     var archive = archiver('zip', {
         zlib: { level: 9 }
     });
-    archive.directory(packagePath, 'glide-v' + version);
+    archive.directory(packagePath, 'quiver-v' + version);
     archive.pipe(output);
     await archive.finalize();
 
@@ -30,9 +30,9 @@ async function afterPackageBuilt(packagePaths) {
 
         const options = {
             src: packagePath,
-            dest: 'releases/bin/glide-installer-win-x64',
+            dest: 'releases/bin/quiver-installer-win-x64',
             icon: 'assets/icons/icon.ico',
-            licenseUrl: 'https://github.com/jmattaa/glide-brwoser/blob/main/LICENSE',
+            licenseUrl: 'https://github.com/jmattaa/quiver-brwoser/blob/main/LICENSE',
             noMsi: true
         };
 

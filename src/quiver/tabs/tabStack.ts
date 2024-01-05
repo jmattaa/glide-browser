@@ -1,5 +1,5 @@
 import { BrowserView } from "electron";
-import { Glide } from "../glide";
+import { Quiver } from "../quiver";
 import { tabActivity } from "./tabActivity";
 import * as path from 'path';
 
@@ -12,15 +12,15 @@ export interface Tab {
 };
 
 export class TabStack {
-    private glide: Glide;
+    private quiver: Quiver;
 
     public state: {
         tabs: Tab[],
         currentTab: Tab
     };
 
-    constructor(tab: Tab, glide: Glide) {
-        this.glide = glide;
+    constructor(tab: Tab, quiver: Quiver) {
+        this.quiver = quiver;
         this.state = {
             tabs: [],
             currentTab: tab,
@@ -36,38 +36,38 @@ export class TabStack {
         this.state.tabs.push(tab);
         this.switch(tab.id);
 
-        this.glide.windowManager.webpage.webContents.on('did-navigate', (_event, url) => {
+        this.quiver.windowManager.webpage.webContents.on('did-navigate', (_event, url) => {
             if (url.startsWith('file://' + path.join(
                 __dirname,
                 '..',
                 '..',
-                'glide-pages'
+                'quiver-pages'
             )))
                 return;
 
-            this.glide.urlManager.url = url;
+            this.quiver.urlManager.url = url;
             this.state.currentTab.url = url;
         });
 
-        this.glide.windowManager.webpage.webContents.on('did-finish-load', () => {
+        this.quiver.windowManager.webpage.webContents.on('did-finish-load', () => {
             if (
-                this.glide.urlManager.url.
+                this.quiver.urlManager.url.
                     startsWith(
                         'file://' + path.join(
                             __dirname,
                             '..',
                             '..',
-                            'glide-pages'
+                            'quiver-pages'
                         )
                     )
             ) return;
 
-            this.glide.currentPageTitle =
-                this.glide.windowManager.webpage.webContents.getTitle();
-            this.glide.tabManager.updateCurrentTab();
+            this.quiver.currentPageTitle =
+                this.quiver.windowManager.webpage.webContents.getTitle();
+            this.quiver.tabManager.updateCurrentTab();
         });
 
-        this.glide.windowManager.webpage.webContents.on('did-fail-load', (
+        this.quiver.windowManager.webpage.webContents.on('did-fail-load', (
             e,
             _errorCode,
             errorDesc,
@@ -76,15 +76,15 @@ export class TabStack {
             e.preventDefault();
             const urlToOpen =
                 path.join(
-                    'glide-pages',
+                    'quiver-pages',
                     'error',
                     'index.html'
                 ) +
                 '?ed=' + errorDesc +
                 '&url=' + validatedUrl;
 
-            this.glide.urlManager.openGlideUrl(urlToOpen);
-            this.glide.urlManager.url = validatedUrl;
+            this.quiver.urlManager.openQuiverUrl(urlToOpen);
+            this.quiver.urlManager.url = validatedUrl;
         });
     }
 
@@ -126,19 +126,19 @@ export class TabStack {
             throw new ReferenceError(`Tab with id: ${tabId} can't be selected`);
 
         // remove old browserView
-        this.glide.windowManager.appwindow.removeBrowserView(this.state.currentTab.webpage);
+        this.quiver.windowManager.appwindow.removeBrowserView(this.state.currentTab.webpage);
 
-        this.glide.tabManager.closeTabsView();
+        this.quiver.tabManager.closeTabsView();
 
         // last active is now before we switch
         this.state.currentTab.lastActivity = Date.now();
 
         this.state.currentTab = this.state.tabs[tabIdx];
 
-        this.glide.windowManager.webpage = this.state.currentTab.webpage;
-        this.glide.urlManager.url = this.state.currentTab.url;
+        this.quiver.windowManager.webpage = this.state.currentTab.webpage;
+        this.quiver.urlManager.url = this.state.currentTab.url;
 
-        const appwinBounds = this.glide.windowManager.appwindow.getBounds();
+        const appwinBounds = this.quiver.windowManager.appwindow.getBounds();
         this.state.currentTab.webpage.setBounds({
             x: 0,
             y: 0,
@@ -153,8 +153,8 @@ export class TabStack {
         });
 
         // add the new one
-        this.glide.windowManager.appwindow.
-            addBrowserView(this.glide.windowManager.webpage);
+        this.quiver.windowManager.appwindow.
+            addBrowserView(this.quiver.windowManager.webpage);
     }
 
     // this is like close but we silently close without switching tabs

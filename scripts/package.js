@@ -16,7 +16,7 @@ function getPlatformIconPath(platform) {
 async function packageApp(platform, arch) {
     const appConfig = {
         dir: process.cwd(),
-        name: 'glide',
+        name: 'quiver',
         platform: platform || process.platform,
         arch: arch || process.arch,
         out: path.join(process.cwd(), 'releases'),

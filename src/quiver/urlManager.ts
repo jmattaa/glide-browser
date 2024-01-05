@@ -1,33 +1,33 @@
 import { formatUrl, isDomain, isUrl } from '../utils';
 import * as path from 'path';
 import { ipcMain } from 'electron';
-import { Glide } from './glide';
+import { Quiver } from './quiver';
 
 export class UrlManager {
     public url: string;
-    private glide: Glide;
+    private quiver: Quiver;
 
-    constructor(glide: Glide, url: string) {
+    constructor(quiver: Quiver, url: string) {
         this.url = url;
-        this.glide = glide;
+        this.quiver = quiver;
 
         // ipc stuff
         ipcMain.on('searchbar-enter', (_event, value) => {
             this.openUrl(value);
-            this.glide.windowManager.appwindow.
-                removeBrowserView(this.glide.windowManager.glideView);
+            this.quiver.windowManager.appwindow.
+                removeBrowserView(this.quiver.windowManager.quiverView);
         });
 
         ipcMain.on('searchbar-escape', () => {
-            this.glide.windowManager.appwindow.
-                removeBrowserView(this.glide.windowManager.glideView);
+            this.quiver.windowManager.appwindow.
+                removeBrowserView(this.quiver.windowManager.quiverView);
         })
     }
 
     public openUrl(url = this.url) {
-        if (url.startsWith('glide://')) {
+        if (url.startsWith('quiver://')) {
             this.url = url;
-            this.openGlideUrl();
+            this.openQuiverUrl();
             return;
         } else if (isDomain(url) || isUrl(url)) {
             this.url = formatUrl(url);
@@ -41,7 +41,7 @@ export class UrlManager {
             const formattedQuery: string = url.split(' ').join('+');
             let baseUrl;
 
-            switch (this.glide.settingsManager.settings['search-engine']) {
+            switch (this.quiver.settingsManager.settings['search-engine']) {
                 case 'google':
                     baseUrl = 'https://www.google.com/search?q=';
                     break;
@@ -58,40 +58,40 @@ export class UrlManager {
             this.url = baseUrl + formattedQuery;
         }
 
-        this.glide.windowManager.webpage.webContents.loadURL(this.url);
+        this.quiver.windowManager.webpage.webContents.loadURL(this.url);
     }
 
     public openDefaultUrl() {
-        this.openUrl(this.glide.settingsManager.settings['default-url']);
+        this.openUrl(this.quiver.settingsManager.settings['default-url']);
     }
 
-    public openGlideUrl(url = this.url) {
+    public openQuiverUrl(url = this.url) {
         this.url = url;
         let filename;
 
-        if (!this.url.startsWith('glide://'))
+        if (!this.url.startsWith('quiver://'))
             filename = this.url;
         else
             filename =
-                path.join('glide-pages', this.url.replace('glide://', '') + '.html');
+                path.join('quiver-pages', this.url.replace('quiver://', '') + '.html');
 
-        this.glide.windowManager.webpage.webContents.
+        this.quiver.windowManager.webpage.webContents.
             loadURL('file://' + path.join(__dirname, '..', filename));
     }
 
     public showUrlbar() {
-        this.glide.windowManager.appwindow.
-            addBrowserView(this.glide.windowManager.glideView);
+        this.quiver.windowManager.appwindow.
+            addBrowserView(this.quiver.windowManager.quiverView);
 
-        this.glide.windowManager.glideView.setBounds({
+        this.quiver.windowManager.quiverView.setBounds({
             x: 0,
             y: 0,
-            width: this.glide.windowManager.webpage.getBounds().width,
-            height: this.glide.windowManager.webpage.getBounds().height,
+            width: this.quiver.windowManager.webpage.getBounds().width,
+            height: this.quiver.windowManager.webpage.getBounds().height,
         });
 
-        this.glide.windowManager.glideView.webContents.
+        this.quiver.windowManager.quiverView.webContents.
             send('searchbar-open', { url: this.url });
-        this.glide.windowManager.glideView.webContents.focus();
+        this.quiver.windowManager.quiverView.webContents.focus();
     }
 }

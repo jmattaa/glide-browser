@@ -2,8 +2,8 @@ const formElement = document.getElementById("settingsForm");
 const settingsBanner = document.querySelector(".banner");
 
 window.onload = function() {
-    window.glideApi.send('request-settings', {});
-    window.glideApi.on('request-settings-response', function(_evt, data) {
+    window.quiverApi.send('request-settings', {});
+    window.quiverApi.on('request-settings-response', function(_evt, data) {
         createSettingsForm(data.settings);
     });
 }
@@ -45,7 +45,7 @@ function createSettingsForm(settings) {
 }
 
 function changeSetting(setting, value) {
-    window.glideApi.send('change-settings', { setting, value });
+    window.quiverApi.send('change-settings', { setting, value });
 
     // show banner
     settingsBanner.style.display = 'block';

@@ -12,7 +12,7 @@ errorUrlEl.innerHTML = `Check if there is a typo in '${expectedUrl}'`;
 
 function reloadPage() {
     window.postMessage({
-        name: 'glide-ipc-reload-err-page',
+        name: 'quiver-ipc-reload-err-page',
         data: {
             url: expectedUrl,
         },

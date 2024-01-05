@@ -31,7 +31,7 @@ require('./package.js')('linux', platform).then(function(paths) {
             output: 'releases/bin/snap'
         },
         snap: {
-            artifactName: 'glide-v' + version + '-linux-' + platform + '.snap'
+            artifactName: 'quiver-v' + version + '-linux-' + platform + '.snap'
         }
     };
 

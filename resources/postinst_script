@@ -3,7 +3,7 @@
 set -e
 
 if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ]; then
-    echo "Run sudo xdg-settings set default-web-browser glide.desktop && sudo update-alternatives --config x-www-browser to set glide as your default browser."
-    ln -sf /opt/glide/glide /usr/bin/glide
+    echo "Run sudo xdg-settings set default-web-browser quiver.desktop && sudo update-alternatives --config x-www-browser to set quiver as your default browser."
+    ln -sf /opt/quiver/quiver /usr/bin/quiver
 fi
 

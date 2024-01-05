@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron';
-import { Glide } from './glide/glide';
+import { Quiver } from './quiver/quiver';
 import fs from 'fs';
 import { configDir, settingsPath } from './globals';
 import * as path from 'path';
@@ -15,15 +15,15 @@ if (!fs.existsSync(settingsPath)) {
     });
 }
 
-let glide: Glide;
+let quiver: Quiver;
 
 function createWindow() {
     fs.readFile(settingsPath, (err, res) => {
         if (err)
-            throw Error(err + '\r\nGLIDE NOT INSTALLED CORRECTLY!');
+            throw Error(err + '\r\nQUIVER NOT INSTALLED CORRECTLY!');
 
-        glide = new Glide(JSON.parse(res.toString()));
-        glide.urlManager.openUrl();
+        quiver = new Quiver(JSON.parse(res.toString()));
+        quiver.urlManager.openUrl();
     });
 }
 

@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('glideApi', {
+contextBridge.exposeInMainWorld('quiverApi', {
     send: (channel, data) => {
         ipcRenderer.send(channel, data);
     },
